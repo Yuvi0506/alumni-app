@@ -16,29 +16,59 @@
         .header {
             background: #0a2351;
             color: #fff;
-            padding: 20px;
-            text-align: center;
+            padding: 15px 20px;
             border-bottom: 5px solid #ffc107;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
         }
         .header img.logo {
-            width: 80px;
-            vertical-align: middle;
+            width: 60px;
             margin-right: 15px;
         }
         .header h1 {
-            display: inline-block;
             margin: 0;
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: 600;
-            vertical-align: middle;
         }
         .header p {
             margin: 5px 0 0;
-            font-size: 1em;
+            font-size: 0.9em;
             font-style: italic;
         }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 0.9em;
+        }
+        .user-info .user-icon {
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        .user-info button {
+            padding: 6px 12px;
+            background: #dc3545;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .user-info button:hover {
+            background: #c82333;
+        }
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 20px auto;
             padding: 15px;
             background: #fff;
@@ -64,6 +94,8 @@
         .search-form {
             display: flex;
             justify-content: center;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 15px;
         }
         .search-form input {
@@ -85,6 +117,12 @@
         }
         .search-form button:hover {
             background: #1a3c78;
+        }
+        .search-form select {
+            padding: 10px;
+            border: 2px solid #0a2351;
+            border-radius: 6px;
+            font-size: 0.9em;
         }
         input {
             padding: 10px;
@@ -114,18 +152,33 @@
         }
         .alumni-list {
             margin: 20px 0;
-            overflow-x: auto;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85em;
+            table-layout: fixed;
         }
         th, td {
-            padding: 10px 8px;
+            padding: 8px 6px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
+        th:nth-child(1), td:nth-child(1) { width: 10%; } /* Name */
+        th:nth-child(2), td:nth-child(2) { width: 10%; } /* Location */
+        th:nth-child(3), td:nth-child(3) { width: 10%; } /* Institute */
+        th:nth-child(4), td:nth-child(4) { width: 8%; } /* Course */
+        th:nth-child(5), td:nth-child(5) { width: 6%; } /* Batch Year */
+        th:nth-child(6), td:nth-child(6) { width: 10%; } /* Current Org */
+        th:nth-child(7), td:nth-child(7) { width: 8%; } /* Position */
+        th:nth-child(8), td:nth-child(8) { width: 8%; } /* Past Exp */
+        th:nth-child(9), td:nth-child(9) { width: 10%; } /* LinkedIn */
+        th:nth-child(10), td:nth-child(10) { width: 8%; } /* Mobile */
+        th:nth-child(11), td:nth-child(11) { width: 8%; } /* Other */
+        th:nth-child(12), td:nth-child(12) { width: 10%; } /* Actions */
         th {
             background: #0a2351;
             color: white;
@@ -146,7 +199,7 @@
             color: #ff8c00;
         }
         .admin-actions button {
-            padding: 6px 10px;
+            padding: 5px 8px;
             font-size: 0.8em;
             margin-right: 5px;
         }
@@ -178,20 +231,6 @@
             background: #0a2351;
             color: white;
         }
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #ffc107;
-            color: #0a2351;
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .theme-toggle:hover {
-            background: #ff8c00;
-        }
         #editForm input {
             width: calc(50% - 8px);
             display: inline-block;
@@ -204,11 +243,21 @@
 </head>
 <body>
     <div class="header">
-        <img src="https://github.com/Yuvi0506/alumni-app/blob/main/public/alum-logo.png" alt="LAA Logo" class="logo">
-        <h1>Loyola Alumni Network - USA</h1>
-        <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
+        <div class="header-left">
+            <img src="logo.png" alt="LAA Logo" class="logo">
+            <div>
+                <h1>Loyola Alumni Network - USA</h1>
+                <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info" id="userInfo">
+                <span id="loggedInUser"></span>
+                <span class="user-icon">👤</span>
+                <button id="logoutButton" class="hidden" onclick="logout()">Logout</button>
+            </div>
+        </div>
     </div>
-    <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
     <div class="container">
         <div id="loginSection">
             <div class="login-form">
@@ -221,6 +270,11 @@
             <div class="search-form">
                 <input type="text" id="searchInput" placeholder="Search alumni..." onkeyup="searchAlumni()">
                 <button onclick="searchAlumni()">Search</button>
+                <select id="pageSize" onchange="updatePageSize()">
+                    <option value="5">5 per page</option>
+                    <option value="10">10 per page</option>
+                    <option value="15">15 per page</option>
+                </select>
             </div>
             <div class="alumni-list">
                 <table id="alumniTable">
@@ -268,7 +322,7 @@
         let userRole = null;
         let currentPage = 1;
         let searchTerm = '';
-        const itemsPerPage = 5;
+        let itemsPerPage = 5;
 
         // Display alumni list in table
         function displayAlumni(data, totalPages) {
@@ -339,8 +393,12 @@
             .then(data => {
                 if (data.success) {
                     userRole = data.role;
+                    localStorage.setItem('userRole', userRole);
+                    localStorage.setItem('username', username);
                     document.getElementById('loginSection').classList.add('hidden');
                     document.getElementById('mainSection').classList.remove('hidden');
+                    document.getElementById('logoutButton').classList.remove('hidden');
+                    document.getElementById('loggedInUser').textContent = `Welcome, ${username}`;
                     if (userRole === 'admin') {
                         document.getElementById('editForm').classList.remove('hidden');
                     }
@@ -351,9 +409,44 @@
             });
         }
 
-        // Fetch alumni data with optional search term
+        // Logout
+        function logout() {
+            userRole = null;
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('username');
+            document.getElementById('logoutButton').classList.add('hidden');
+            document.getElementById('loggedInUser').textContent = '';
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('searchInput').value = '';
+            searchTerm = '';
+            currentPage = 1;
+        }
+
+        // Check if user is already logged in
+        window.onload = function() {
+            const storedRole = localStorage.getItem('userRole');
+            const storedUsername = localStorage.getItem('username');
+            if (storedRole && storedUsername) {
+                userRole = storedRole;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('mainSection').classList.remove('hidden');
+                document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('loggedInUser').textContent = `Welcome, ${storedUsername}`;
+                if (userRole === 'admin') {
+                    document.getElementById('editForm').classList.remove('hidden');
+                }
+                fetchAlumni();
+            }
+        };
+
+        // Fetch alumni data with optional search term and page size
         function fetchAlumni() {
-            const query = searchTerm ? `?page=${currentPage}&limit=${itemsPerPage}&search=${encodeURIComponent(searchTerm)}` : `?page=${currentPage}&limit=${itemsPerPage}`;
+            const query = searchTerm 
+                ? `?page=${currentPage}&limit=${itemsPerPage}&search=${encodeURIComponent(searchTerm)}` 
+                : `?page=${currentPage}&limit=${itemsPerPage}`;
             fetch(`/api/alumni${query}`)
                 .then(response => response.json())
                 .then(data => displayAlumni(data.alumni, data.pages));
@@ -363,6 +456,13 @@
         function searchAlumni() {
             searchTerm = document.getElementById('searchInput').value.trim();
             currentPage = 1; // Reset to first page on new search
+            fetchAlumni();
+        }
+
+        // Update page size
+        function updatePageSize() {
+            itemsPerPage = parseInt(document.getElementById('pageSize').value);
+            currentPage = 1; // Reset to first page on page size change
             fetchAlumni();
         }
 
@@ -479,11 +579,6 @@
                     }
                 });
             }
-        }
-
-        // Theme toggle (kept for consistency, but can be removed if not needed)
-        function toggleTheme() {
-            // Theme toggle removed for branding consistency
         }
     </script>
 </body>
