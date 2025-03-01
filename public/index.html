@@ -173,7 +173,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="https://raw.githubusercontent.com/yourusername/alumni-app/main/public/logo.png" alt="LAA Logo" class="logo">
+        <img src="https://raw.githubusercontent.com/yourusername/alumni-app/main/public/logo.JPG" alt="LAA Logo" class="logo">
         <h1>Loyola Alumni Network</h1>
         <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
     </div>
@@ -258,7 +258,7 @@
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            fetch('/login', {
+            fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -281,7 +281,7 @@
 
         // Fetch alumni data
         function fetchAlumni() {
-            fetch(`/alumni?page=${currentPage}&limit=${itemsPerPage}`)
+            fetch(`/api/alumni?page=${currentPage}&limit=${itemsPerPage}`)
                 .then(response => response.json())
                 .then(data => displayAlumni(data.alumni, data.pages));
         }
@@ -302,7 +302,7 @@
                 otherDetails: document.getElementById('otherDetails').value,
                 role: userRole
             };
-            fetch('/alumni', {
+            fetch('/api/alumni', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(alumni)
@@ -321,7 +321,7 @@
 
         // Edit alumni
         function editAlumni(id) {
-            fetch('/alumni')
+            fetch('/api/alumni')
                 .then(response => response.json())
                 .then(data => {
                     const alumni = data.alumni.find(a => a._id === id);
@@ -361,7 +361,7 @@
                 otherDetails: document.getElementById('otherDetails').value,
                 role: userRole
             };
-            fetch(`/alumni/${id}`, {
+            fetch(`/api/alumni/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(alumni)
@@ -384,7 +384,7 @@
         // Remove alumni
         function removeAlumni(id) {
             if (confirm('Are you sure you want to delete this alumni record?')) {
-                fetch(`/alumni/${id}`, {
+                fetch(`/api/alumni/${id}`, {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ role: userRole })
