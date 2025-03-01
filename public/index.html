@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loyola Alumni Network</title>
+    <title>Loyola Alumni Network - USA</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -38,17 +38,18 @@
             font-style: italic;
         }
         .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 15px;
             background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
         h2 {
             color: #0a2351;
             text-align: center;
             margin-bottom: 20px;
+            font-size: 1.5em;
         }
         .hidden {
             display: none;
@@ -56,15 +57,15 @@
         .login-form, .edit-form {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            max-width: 400px;
+            gap: 12px;
+            max-width: 350px;
             margin: 0 auto 20px;
         }
         input {
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
+            border-radius: 6px;
+            font-size: 0.9em;
             transition: border-color 0.3s;
         }
         input:focus {
@@ -72,76 +73,81 @@
             outline: none;
         }
         button {
-            padding: 12px;
+            padding: 10px;
             background: #0a2351;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 0.9em;
             font-weight: 600;
             transition: background 0.3s, transform 0.2s;
         }
         button:hover {
             background: #1a3c78;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
         .alumni-list {
-            margin: 30px 0;
+            margin: 20px 0;
+            overflow-x: auto;
         }
-        .alumni-card {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+        th, td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #0a2351;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
             background: #f8f9fa;
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 10px;
-            border-left: 5px solid #ffc107;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s;
-            position: relative;
         }
-        .alumni-card:hover {
-            transform: scale(1.02);
+        tr:hover {
+            background: #e9ecef;
         }
-        .alumni-card a {
+        a {
             color: #ffc107;
             text-decoration: none;
-            font-weight: 600;
             transition: color 0.3s;
         }
-        .alumni-card a:hover {
+        a:hover {
             color: #ff8c00;
         }
-        .admin-actions {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
         .admin-actions button {
-            padding: 8px 12px;
-            font-size: 0.9em;
-            background: #dc3545;
+            padding: 6px 10px;
+            font-size: 0.8em;
+            margin-right: 5px;
         }
-        .admin-actions button:first-child {
+        .admin-actions button.edit {
             background: #28a745;
         }
-        .admin-actions button:hover {
-            background: #c82333;
+        .admin-actions button.delete {
+            background: #dc3545;
         }
-        .admin-actions button:first-child:hover {
+        .admin-actions button.edit:hover {
             background: #218838;
+        }
+        .admin-actions button.delete:hover {
+            background: #c82333;
         }
         .pagination {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 8px;
+            margin-top: 15px;
         }
         .pagination button {
-            padding: 8px 16px;
+            padding: 8px 12px;
             background: #ddd;
             color: #0a2351;
+            border-radius: 5px;
         }
         .pagination button.active {
             background: #0a2351;
@@ -153,7 +159,7 @@
             right: 20px;
             background: #ffc107;
             color: #0a2351;
-            padding: 10px;
+            padding: 8px;
             border-radius: 50%;
             cursor: pointer;
             transition: background 0.3s;
@@ -162,9 +168,9 @@
             background: #ff8c00;
         }
         #editForm input {
-            width: calc(50% - 10px);
+            width: calc(50% - 8px);
             display: inline-block;
-            margin: 5px;
+            margin: 4px;
         }
         #editForm input.full-width {
             width: 100%;
@@ -173,8 +179,8 @@
 </head>
 <body>
     <div class="header">
-        <img src="https://raw.githubusercontent.com/yourusername/alumni-app/main/public/logo.JPG" alt="LAA Logo" class="logo">
-        <h1>Loyola Alumni Network</h1>
+        <img src="https://raw.githubusercontent.com/yuvi0506/alumni-app/main/public/logo.png" alt="LAA Logo" class="logo">
+        <h1>Loyola Alumni Network - USA</h1>
         <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
     </div>
     <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
@@ -187,7 +193,27 @@
             </div>
         </div>
         <div id="mainSection" class="hidden">
-            <div class="alumni-list" id="alumniList"></div>
+            <div class="alumni-list">
+                <table id="alumniTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Institute</th>
+                            <th>Course</th>
+                            <th>Batch Year</th>
+                            <th>Current Org</th>
+                            <th>Position</th>
+                            <th>Past Exp</th>
+                            <th>LinkedIn</th>
+                            <th>Mobile</th>
+                            <th>Other</th>
+                            <th class="admin-column hidden">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alumniList"></tbody>
+                </table>
+            </div>
             <div class="pagination" id="pagination"></div>
             <div id="editForm" class="hidden">
                 <h2>Add Alumni</h2>
@@ -214,27 +240,43 @@
         let currentPage = 1;
         const itemsPerPage = 5;
 
-        // Display alumni list
+        // Display alumni list in table
         function displayAlumni(data, totalPages) {
             const list = document.getElementById('alumniList');
             list.innerHTML = data.map(a => `
-                <div class="alumni-card" data-id="${a._id}">
-                    <h3>${a.name}</h3>
-                    <p><strong>Location:</strong> ${a.location}</p>
-                    <p><strong>Institute:</strong> ${a.institute} (${a.course}, ${a.batchYear})</p>
-                    <p><strong>Current:</strong> ${a.currentPosition} at ${a.currentOrg}</p>
-                    <p><strong>Past:</strong> ${a.pastExperience}</p>
-                    <p><strong>Mobile:</strong> ${a.mobile}</p>
-                    <p><strong>LinkedIn:</strong> <a href="${a.linkedin}" target="_blank">${a.linkedin}</a></p>
-                    <p><strong>Other:</strong> ${a.otherDetails}</p>
+                <tr data-id="${a._id}">
+                    <td>${a.name}</td>
+                    <td>${a.location}</td>
+                    <td>${a.institute}</td>
+                    <td>${a.course}</td>
+                    <td>${a.batchYear}</td>
+                    <td>${a.currentOrg}</td>
+                    <td>${a.currentPosition}</td>
+                    <td>${a.pastExperience}</td>
+                    <td><a href="${a.linkedin}" target="_blank">${a.linkedin}</a></td>
+                    <td>${a.mobile}</td>
+                    <td>${a.otherDetails}</td>
                     ${userRole === 'admin' ? `
-                        <div class="admin-actions">
-                            <button onclick="editAlumni('${a._id}')">Edit</button>
-                            <button onclick="removeAlumni('${a._id}')">Delete</button>
-                        </div>
-                    ` : ''}
-                </div>
+                        <td class="admin-column">
+                            <div class="admin-actions">
+                                <button class="edit" onclick="editAlumni('${a._id}')">Edit</button>
+                                <button class="delete" onclick="removeAlumni('${a._id}')">Delete</button>
+                            </div>
+                        </td>
+                    ` : '<td class="admin-column hidden"></td>'}
+                </tr>
             `).join('');
+
+            // Show admin column only for admin users
+            const adminColumn = document.querySelectorAll('.admin-column');
+            adminColumn.forEach(col => {
+                if (userRole === 'admin') {
+                    col.classList.remove('hidden');
+                } else {
+                    col.classList.add('hidden');
+                }
+            });
+
             renderPagination(totalPages);
         }
 
@@ -361,7 +403,7 @@
                 otherDetails: document.getElementById('otherDetails').value,
                 role: userRole
             };
-            fetch(`/api/alumni/${id}`, {
+            fetch(`/api/alumni?id=${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(alumni)
@@ -384,7 +426,7 @@
         // Remove alumni
         function removeAlumni(id) {
             if (confirm('Are you sure you want to delete this alumni record?')) {
-                fetch(`/api/alumni/${id}`, {
+                fetch(`/api/alumni?id=${id}`, {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ role: userRole })
@@ -401,7 +443,7 @@
             }
         }
 
-        // Theme toggle (light mode only, removing dark mode for branding consistency)
+        // Theme toggle (kept for consistency, but can be removed if not needed)
         function toggleTheme() {
             // Theme toggle removed for branding consistency
         }
