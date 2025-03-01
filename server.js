@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // MongoDB Connection
-mongoose.connect('mongodb+srv://alum:Password@cluster0.mongodb.net/alumniDB?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://alum:Password@cluster0.y22vf.mongodb.net/alumniDB?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('Connected to MongoDB'))
