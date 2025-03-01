@@ -1,9 +1,21 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+// Load environment variables locally
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
+// Connect to MongoDB (only once)
+if (mongoose.connection.readyState === 0) {
+    mongoose.connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000
+    }).then(() => console.log('Connected to MongoDB'))
+      .catch(err => console.error('MongoDB connection error:', err));
+}
 
 const alumniSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -22,14 +34,36 @@ const alumniSchema = new mongoose.Schema({
 const Alumni = mongoose.model('Alumni', alumniSchema);
 
 module.exports = async (req, res) => {
+    if (!process.env.MONGO_URI) {
+        return res.status(500).json({ success: false, message: "MONGO_URI not set" });
+    }
+
     if (req.method === 'GET') {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5;
+        const search = req.query.search || '';
         const skip = (page - 1) * limit;
 
         try {
-            const alumni = await Alumni.find().skip(skip).limit(limit);
-            const total = await Alumni.countDocuments();
+            // Create a search query to match any field (case-insensitive)
+            const searchQuery = search ? {
+                $or: [
+                    { name: { $regex: search, $options: 'i' } },
+                    { location: { $regex: search, $options: 'i' } },
+                    { institute: { $regex: search, $options: 'i' } },
+                    { course: { $regex: search, $options: 'i' } },
+                    { batchYear: { $regex: search, $options: 'i' } },
+                    { currentOrg: { $regex: search, $options: 'i' } },
+                    { currentPosition: { $regex: search, $options: 'i' } },
+                    { pastExperience: { $regex: search, $options: 'i' } },
+                    { linkedin: { $regex: search, $options: 'i' } },
+                    { mobile: { $regex: search, $options: 'i' } },
+                    { otherDetails: { $regex: search, $options: 'i' } }
+                ]
+            } : {};
+
+            const alumni = await Alumni.find(searchQuery).skip(skip).limit(limit);
+            const total = await Alumni.countDocuments(searchQuery);
             res.status(200).json({
                 alumni,
                 total,
