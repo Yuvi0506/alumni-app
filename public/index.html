@@ -61,6 +61,31 @@
             max-width: 350px;
             margin: 0 auto 20px;
         }
+        .search-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .search-form input {
+            width: 300px;
+            padding: 10px;
+            border: 2px solid #0a2351;
+            border-radius: 6px 0 0 6px;
+            font-size: 0.9em;
+        }
+        .search-form button {
+            padding: 10px 15px;
+            background: #0a2351;
+            color: white;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+        .search-form button:hover {
+            background: #1a3c78;
+        }
         input {
             padding: 10px;
             border: 2px solid #ddd;
@@ -193,6 +218,10 @@
             </div>
         </div>
         <div id="mainSection" class="hidden">
+            <div class="search-form">
+                <input type="text" id="searchInput" placeholder="Search alumni..." onkeyup="searchAlumni()">
+                <button onclick="searchAlumni()">Search</button>
+            </div>
             <div class="alumni-list">
                 <table id="alumniTable">
                     <thead>
@@ -238,6 +267,7 @@
     <script>
         let userRole = null;
         let currentPage = 1;
+        let searchTerm = '';
         const itemsPerPage = 5;
 
         // Display alumni list in table
@@ -321,11 +351,19 @@
             });
         }
 
-        // Fetch alumni data
+        // Fetch alumni data with optional search term
         function fetchAlumni() {
-            fetch(`/api/alumni?page=${currentPage}&limit=${itemsPerPage}`)
+            const query = searchTerm ? `?page=${currentPage}&limit=${itemsPerPage}&search=${encodeURIComponent(searchTerm)}` : `?page=${currentPage}&limit=${itemsPerPage}`;
+            fetch(`/api/alumni${query}`)
                 .then(response => response.json())
                 .then(data => displayAlumni(data.alumni, data.pages));
+        }
+
+        // Search alumni
+        function searchAlumni() {
+            searchTerm = document.getElementById('searchInput').value.trim();
+            currentPage = 1; // Reset to first page on new search
+            fetchAlumni();
         }
 
         // Add new alumni
