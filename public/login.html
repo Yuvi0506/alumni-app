@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body class="login-page loading">
+<body class="login-page">
     <div id="header-placeholder"></div>
     <div class="container">
         <div class="login-form">
@@ -25,16 +25,6 @@
 
     <script src="/js/load-common.js"></script>
     <script>
-        // Redirect to index.html if already logged in
-        window.onload = function() {
-            const storedRole = localStorage.getItem('userRole');
-            const storedEmail = localStorage.getItem('userEmail');
-            const storedName = localStorage.getItem('userName');
-            if (storedRole && storedEmail && storedName) {
-                window.location.replace('/html/index.html');
-            }
-        };
-
         // Login
         function login() {
             let email = document.getElementById('username').value;
