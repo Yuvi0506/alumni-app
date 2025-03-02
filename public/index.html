@@ -84,14 +84,11 @@
             color: #fff;
             text-align: center;
             margin-bottom: 20px;
-            font-size: 1.0em;
-            background: #003087;
+            font-size: 1.0em; /* Smaller font size */
+            background: #003087; /* Match table header background */
             padding: 10px;
             border-radius: 5px;
             font-weight: 300;
-            margin-left: auto;
-            margin-right: auto;
-            width: fit-content;
         }
         .hidden {
             display: none;
@@ -179,22 +176,22 @@
             table-layout: fixed;
         }
         th, td {
-            padding: 10px;
+            padding: 8px 5px; /* Reduced padding for less space between columns */
             text-align: left;
             border-bottom: 1px solid #ddd;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        th:nth-child(1), td:nth-child(1) { width: 14%; } /* Name */
-        th:nth-child(2), td:nth-child(2) { width: 14%; } /* Location */
-        th:nth-child(3), td:nth-child(3) { width: 14%; } /* Institute */
+        th:nth-child(1), td:nth-child(1) { width: 15%; } /* Name */
+        th:nth-child(2), td:nth-child(2) { width: 15%; } /* Location */
+        th:nth-child(3), td:nth-child(3) { width: 15%; } /* Institute */
         th:nth-child(4), td:nth-child(4) { width: 12%; } /* Course */
         th:nth-child(5), td:nth-child(5) { width: 12%; } /* Batch Year */
-        th:nth-child(6), td:nth-child(6) { width: 14%; } /* Current Org */
+        th:nth-child(6), td:nth-child(6) { width: 15%; } /* Current Org */
         th:nth-child(7), td:nth-child(7) { width: 12%; } /* Position */
-        th:nth-child(8), td:nth-child(8) { width: 8%; } /* Details */
-        th:nth-child(9), td:nth-child(9) { width: 10%; } /* Actions */
+        th:nth-child(8), td:nth-child(8) { width: 6%; } /* Details */
+        th:nth-child(9), td:nth-child(9) { width: 8%; } /* Actions */
         th {
             background: #003087;
             color: white;
@@ -214,10 +211,15 @@
         a:hover {
             color: #f5c518;
         }
+        .admin-actions {
+            display: flex;
+            gap: 4px; /* Reduced gap between buttons */
+            justify-content: center;
+        }
         .admin-actions button {
-            padding: 5px 8px;
-            font-size: 0.8em;
-            margin-right: 5px;
+            padding: 4px 6px; /* Smaller padding for Edit/Delete buttons */
+            font-size: 0.7em; /* Smaller font size for buttons */
+            margin-right: 0; /* Remove margin to save space */
         }
         .admin-actions button.edit {
             background: #28a745;
@@ -268,7 +270,7 @@
             color: white;
         }
         .edit-form-container {
-            max-width: 800px;
+            max-width: 800px; /* Reverted to smaller width */
             margin: 0 auto 20px;
         }
         .edit-form {
@@ -299,7 +301,6 @@
         .edit-form .submit-btn button {
             padding: 12px 30px;
             font-size: 1em;
-            width: fit-content;
         }
         footer {
             background: #003087;
@@ -399,9 +400,13 @@
                             <input type="text" id="otherDetails" placeholder="Other Details">
                         </div>
                     </div>
+                    <br/>
+                    <br/>
+                    <center>
                     <div class="submit-btn">
                         <button onclick="addAlumni()">Add New Alumni</button>
                     </div>
+                    </center>
                 </div>
             </div>
         </div>
