@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loyola Alumni Network - USA</title>
+    <title>Loyola Alumni Network</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -84,7 +84,7 @@
         .hidden {
             display: none;
         }
-        .login-form, .edit-form {
+        .login-form {
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -231,22 +231,53 @@
             background: #0a2351;
             color: white;
         }
-        #editForm input {
-            width: calc(50% - 8px);
-            display: inline-block;
-            margin: 4px;
+        .edit-form {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto 20px;
         }
-        #editForm input.full-width {
+        .edit-form .column {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .edit-form input {
             width: 100%;
+            box-sizing: border-box;
+        }
+        .edit-form .full-width {
+            width: 100%;
+        }
+        .edit-form .submit-btn {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .edit-form .submit-btn button {
+            padding: 12px 30px;
+            font-size: 1em;
+        }
+        @media (max-width: 768px) {
+            .edit-form {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .edit-form .column {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-left">
-            <img src="alum-logo.png" alt="LAA Logo" class="logo">
+            <img src="logo.png" alt="LAA Logo" class="logo">
             <div>
-                <h1>Loyola Alumni Network - USA</h1>
+                <h1>Loyola Alumni Network</h1>
                 <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
             </div>
         </div>
@@ -301,18 +332,24 @@
             <div id="editForm" class="hidden">
                 <h2>Add Alumni</h2>
                 <div class="edit-form">
-                    <input type="text" id="name" placeholder="Name" required>
-                    <input type="text" id="location" placeholder="Location" required>
-                    <input type="text" id="institute" placeholder="Institute" required>
-                    <input type="text" id="course" placeholder="Course" required>
-                    <input type="text" id="batchYear" placeholder="Batch Year" required>
-                    <input type="text" id="currentOrg" placeholder="Current Organization" required>
-                    <input type="text" id="currentPosition" placeholder="Current Position" required>
-                    <input type="text" id="pastExperience" placeholder="Past Experience">
-                    <input type="text" id="linkedin" placeholder="LinkedIn Profile">
-                    <input type="text" id="mobile" placeholder="Mobile Number" required>
-                    <input class="full-width" type="text" id="otherDetails" placeholder="Other Details">
-                    <button onclick="addAlumni()">Add New Alumni</button>
+                    <div class="column">
+                        <input type="text" id="name" placeholder="Name" required>
+                        <input type="text" id="location" placeholder="Location" required>
+                        <input type="text" id="institute" placeholder="Institute" required>
+                        <input type="text" id="course" placeholder="Course" required>
+                        <input type="text" id="batchYear" placeholder="Batch Year" required>
+                        <input type="text" id="currentOrg" placeholder="Current Organization" required>
+                    </div>
+                    <div class="column">
+                        <input type="text" id="currentPosition" placeholder="Current Position" required>
+                        <input type="text" id="pastExperience" placeholder="Past Experience">
+                        <input type="text" id="linkedin" placeholder="LinkedIn Profile">
+                        <input type="text" id="mobile" placeholder="Mobile Number" required>
+                        <input type="text" id="otherDetails" placeholder="Other Details">
+                    </div>
+                    <div class="submit-btn">
+                        <button onclick="addAlumni()">Add New Alumni</button>
+                    </div>
                 </div>
             </div>
         </div>
