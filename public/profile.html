@@ -8,24 +8,7 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <div class="header">
-        <div class="header-left">
-            <img src="logo.png" alt="LAA Logo" class="logo">
-            <div>
-                <h1>Loyola Alumni Network - USA</h1>
-                <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
-            </div>
-        </div>
-        <div class="header-right">
-            <div class="user-info">
-                <span id="loggedInUser"></span>
-                <span class="user-icon">👤</span>
-                <a href="/profile.html">Profile</a>
-                <button onclick="window.location.href='/index.html'">Back to Main</button>
-                <button onclick="logout()">Logout</button>
-            </div>
-        </div>
-    </div>
+    <div id="header-placeholder"></div>
     <div class="container">
         <div class="profile-section">
             <h3>User Profile</h3>
@@ -34,10 +17,9 @@
             <div id="alumniDetails"></div>
         </div>
     </div>
-    <footer>
-        <p>©2025 Loyola Alumni Network - USA. All rights reserved.</p>
-    </footer>
+    <div id="footer-placeholder"></div>
 
+    <script src="/load-common.js"></script>
     <script>
         const userRole = localStorage.getItem('userRole');
         const userEmail = localStorage.getItem('userEmail');
@@ -46,8 +28,6 @@
         if (!userRole || !userEmail || !userName) {
             window.location.href = '/index.html';
         }
-
-        document.getElementById('loggedInUser').textContent = `Welcome, ${userName}`;
 
         // Display user details
         const userDetailsDiv = document.getElementById('userDetails');
@@ -85,13 +65,6 @@
             .catch(err => {
                 document.getElementById('alumniDetails').innerHTML = '<p>Error loading alumni record.</p>';
             });
-
-        function logout() {
-            localStorage.removeItem('userRole');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userName');
-            window.location.href = '/index.html';
-        }
     </script>
 </body>
 </html>
