@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loyola Alumni Network</title>
+    <title>Loyola Alumni Network - USA</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -150,6 +150,13 @@
             background: #1a3c78;
             transform: translateY(-1px);
         }
+        button.details-btn {
+            background: #17a2b8;
+            padding: 6px 12px;
+        }
+        button.details-btn:hover {
+            background: #138496;
+        }
         .alumni-list {
             margin: 20px 0;
         }
@@ -167,18 +174,16 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        th:nth-child(1), td:nth-child(1) { width: 10%; } /* Name */
-        th:nth-child(2), td:nth-child(2) { width: 10%; } /* Location */
-        th:nth-child(3), td:nth-child(3) { width: 10%; } /* Institute */
-        th:nth-child(4), td:nth-child(4) { width: 8%; } /* Course */
-        th:nth-child(5), td:nth-child(5) { width: 6%; } /* Batch Year */
-        th:nth-child(6), td:nth-child(6) { width: 10%; } /* Current Org */
-        th:nth-child(7), td:nth-child(7) { width: 8%; } /* Position */
-        th:nth-child(8), td:nth-child(8) { width: 8%; } /* Past Exp */
-        th:nth-child(9), td:nth-child(9) { width: 10%; } /* LinkedIn */
-        th:nth-child(10), td:nth-child(10) { width: 8%; } /* Mobile */
-        th:nth-child(11), td:nth-child(11) { width: 8%; } /* Other */
-        th:nth-child(12), td:nth-child(12) { width: 10%; } /* Actions */
+        th:nth-child(1), td:nth-child(1) { width: 12%; } /* Name */
+        th:nth-child(2), td:nth-child(2) { width: 12%; } /* Location */
+        th:nth-child(3), td:nth-child(3) { width: 12%; } /* Institute */
+        th:nth-child(4), td:nth-child(4) { width: 10%; } /* Course */
+        th:nth-child(5), td:nth-child(5) { width: 10%; } /* Batch Year */
+        th:nth-child(6), td:nth-child(6) { width: 12%; } /* Current Org */
+        th:nth-child(7), td:nth-child(7) { width: 10%; } /* Position */
+        th:nth-child(8), td:nth-child(8) { width: 10%; } /* Mobile */
+        th:nth-child(9), td:nth-child(9) { width: 12%; } /* Details */
+        th:nth-child(10), td:nth-child(10) { width: 10%; } /* Actions */
         th {
             background: #0a2351;
             color: white;
@@ -215,6 +220,26 @@
         .admin-actions button.delete:hover {
             background: #c82333;
         }
+        .details-row {
+            background: #f1f3f5;
+            border-bottom: 2px solid #ddd;
+        }
+        .details-row td {
+            padding: 15px;
+            white-space: normal;
+        }
+        .details-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .details-content p {
+            margin: 5px 0;
+            flex: 1 1 45%;
+        }
+        .details-content p strong {
+            color: #0a2351;
+        }
         .pagination {
             display: flex;
             justify-content: center;
@@ -250,9 +275,6 @@
             width: 100%;
             box-sizing: border-box;
         }
-        .edit-form .full-width {
-            width: 100%;
-        }
         .edit-form .submit-btn {
             text-align: center;
             margin-top: 20px;
@@ -277,7 +299,7 @@
         <div class="header-left">
             <img src="logo.png" alt="LAA Logo" class="logo">
             <div>
-                <h1>Loyola Alumni Network</h1>
+                <h1>Loyola Alumni Network - USA</h1>
                 <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
             </div>
         </div>
@@ -318,10 +340,8 @@
                             <th>Batch Year</th>
                             <th>Current Org</th>
                             <th>Position</th>
-                            <th>Past Exp</th>
-                            <th>LinkedIn</th>
                             <th>Mobile</th>
-                            <th>Other</th>
+                            <th>Details</th>
                             <th class="admin-column hidden">Actions</th>
                         </tr>
                     </thead>
@@ -345,6 +365,7 @@
                         <input type="text" id="pastExperience" placeholder="Past Experience">
                         <input type="text" id="linkedin" placeholder="LinkedIn Profile">
                         <input type="text" id="mobile" placeholder="Mobile Number" required>
+                        <input type="email" id="email" placeholder="Email" required>
                         <input type="text" id="otherDetails" placeholder="Other Details">
                     </div>
                     <div class="submit-btn">
@@ -360,12 +381,16 @@
         let currentPage = 1;
         let searchTerm = '';
         let itemsPerPage = 5;
+        let expandedRow = null;
 
         // Display alumni list in table
         function displayAlumni(data, totalPages) {
             const list = document.getElementById('alumniList');
-            list.innerHTML = data.map(a => `
-                <tr data-id="${a._id}">
+            list.innerHTML = '';
+            data.forEach(a => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', a._id);
+                row.innerHTML = `
                     <td>${a.name}</td>
                     <td>${a.location}</td>
                     <td>${a.institute}</td>
@@ -373,10 +398,8 @@
                     <td>${a.batchYear}</td>
                     <td>${a.currentOrg}</td>
                     <td>${a.currentPosition}</td>
-                    <td>${a.pastExperience}</td>
-                    <td><a href="${a.linkedin}" target="_blank">${a.linkedin}</a></td>
                     <td>${a.mobile}</td>
-                    <td>${a.otherDetails}</td>
+                    <td><button class="details-btn" onclick="toggleDetails('${a._id}')">Details</button></td>
                     ${userRole === 'admin' ? `
                         <td class="admin-column">
                             <div class="admin-actions">
@@ -385,8 +408,34 @@
                             </div>
                         </td>
                     ` : '<td class="admin-column hidden"></td>'}
-                </tr>
-            `).join('');
+                `;
+                list.appendChild(row);
+
+                // Add details row (hidden by default)
+                const detailsRow = document.createElement('tr');
+                detailsRow.classList.add('details-row');
+                detailsRow.id = `details-${a._id}`;
+                detailsRow.classList.add('hidden');
+                detailsRow.innerHTML = `
+                    <td colspan="10">
+                        <div class="details-content">
+                            <p><strong>Name:</strong> ${a.name}</p>
+                            <p><strong>Location:</strong> ${a.location}</p>
+                            <p><strong>Institute:</strong> ${a.institute}</p>
+                            <p><strong>Course:</strong> ${a.course}</p>
+                            <p><strong>Batch Year:</strong> ${a.batchYear}</p>
+                            <p><strong>Current Org:</strong> ${a.currentOrg}</p>
+                            <p><strong>Position:</strong> ${a.currentPosition}</p>
+                            <p><strong>Past Experience:</strong> ${a.pastExperience}</p>
+                            <p><strong>LinkedIn:</strong> <a href="${a.linkedin}" target="_blank">${a.linkedin}</a></p>
+                            <p><strong>Mobile:</strong> ${a.mobile}</p>
+                            <p><strong>Email:</strong> ${a.email}</p>
+                            <p><strong>Other Details:</strong> ${a.otherDetails}</p>
+                        </div>
+                    </td>
+                `;
+                list.appendChild(detailsRow);
+            });
 
             // Show admin column only for admin users
             const adminColumn = document.querySelectorAll('.admin-column');
@@ -399,6 +448,16 @@
             });
 
             renderPagination(totalPages);
+        }
+
+        // Toggle details view
+        function toggleDetails(id) {
+            const detailsRow = document.getElementById(`details-${id}`);
+            if (expandedRow && expandedRow !== detailsRow) {
+                expandedRow.classList.add('hidden');
+            }
+            detailsRow.classList.toggle('hidden');
+            expandedRow = detailsRow.classList.contains('hidden') ? null : detailsRow;
         }
 
         // Render pagination
@@ -516,6 +575,7 @@
                 pastExperience: document.getElementById('pastExperience').value,
                 linkedin: document.getElementById('linkedin').value,
                 mobile: document.getElementById('mobile').value,
+                email: document.getElementById('email').value,
                 otherDetails: document.getElementById('otherDetails').value,
                 role: userRole
             };
@@ -553,6 +613,7 @@
                         document.getElementById('pastExperience').value = alumni.pastExperience;
                         document.getElementById('linkedin').value = alumni.linkedin;
                         document.getElementById('mobile').value = alumni.mobile;
+                        document.getElementById('email').value = alumni.email;
                         document.getElementById('otherDetails').value = alumni.otherDetails;
 
                         const submitBtn = document.querySelector('#editForm button');
@@ -575,6 +636,7 @@
                 pastExperience: document.getElementById('pastExperience').value,
                 linkedin: document.getElementById('linkedin').value,
                 mobile: document.getElementById('mobile').value,
+                email: document.getElementById('email').value,
                 otherDetails: document.getElementById('otherDetails').value,
                 role: userRole
             };
