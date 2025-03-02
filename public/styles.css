@@ -148,8 +148,8 @@ a:hover {
     color: #f5c518;
 }
 
-/* Login, Signup, and Verify Email specific styles */
-.login-section, .signup-page, .verify-email-page {
+/* Login, Signup, Verify Email, Forgot Password, and Reset Password specific styles */
+.login-section, .signup-page, .verify-email-page, .forgot-password-page, .reset-password-page {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -157,7 +157,7 @@ a:hover {
     min-height: 80vh;
 }
 
-.login-form, .signup-form, .verify-email {
+.login-form, .signup-form, .verify-email, .forgot-password-form, .reset-password-form {
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -175,7 +175,7 @@ a:hover {
     justify-content: space-between;
 }
 
-.signup-form a, .verify-email a {
+.signup-form a, .verify-email a, .forgot-password-form a, .reset-password-form a {
     color: #003087;
     text-decoration: none;
     text-align: center;
@@ -183,11 +183,11 @@ a:hover {
     margin-top: 10px;
 }
 
-.signup-form a:hover, .verify-email a:hover {
+.signup-form a:hover, .verify-email a:hover, .forgot-password-form a:hover, .reset-password-form a:hover {
     color: #f5c518;
 }
 
-.verify-email {
+.verify-email, .forgot-password-form, .reset-password-form {
     text-align: center;
 }
 
@@ -256,4 +256,170 @@ button.details-btn:hover {
 
 table {
     width: 100%;
-    border-collapse: collapse
+    border-collapse: collapse;
+    font-size: 0.9em;
+    table-layout: fixed;
+}
+
+th, td {
+    padding: 8px 5px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+th:nth-child(1), td:nth-child(1) { width: 15%; } /* Name */
+th:nth-child(2), td:nth-child(2) { width: 15%; } /* Location */
+th:nth-child(3), td:nth-child(3) { width: 15%; } /* Institute */
+th:nth-child(4), td:nth-child(4) { width: 12%; } /* Course */
+th:nth-child(5), td:nth-child(5) { width: 12%; } /* Batch Year */
+th:nth-child(6), td:nth-child(6) { width: 15%; } /* Current Org */
+th:nth-child(7), td:nth-child(7) { width: 12%; } /* Position */
+th:nth-child(8), td:nth-child(8) { width: 6%; } /* Details */
+th:nth-child(9), td:nth-child(9) { width: 8%; } /* Actions */
+
+th {
+    background: #003087;
+    color: white;
+    font-weight: 500;
+}
+
+tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+tr:hover {
+    background: #e9ecef;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+.admin-actions button {
+    padding: 4px 6px;
+    font-size: 0.7em;
+    margin-right: 0;
+}
+
+.admin-actions button.edit {
+    background: #28a745;
+}
+
+.admin-actions button.delete {
+    background: #dc3545;
+}
+
+.admin-actions button.edit:hover {
+    background: #218838;
+}
+
+.admin-actions button.delete:hover {
+    background: #c82333;
+}
+
+.details-row {
+    background: #f8f9fa;
+    border-bottom: 2px solid #ddd;
+}
+
+.details-row td {
+    padding: 15px;
+    white-space: normal;
+}
+
+.details-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.details-content p {
+    margin: 5px 0;
+    flex: 1 1 45%;
+}
+
+.details-content p strong {
+    color: #003087;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    background: #ddd;
+    color: #333333;
+    border-radius: 5px;
+}
+
+.pagination button.active {
+    background: #003087;
+    color: white;
+}
+
+.edit-form-container {
+    max-width: 800px;
+    margin: 0 auto 20px;
+}
+
+.edit-form {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.edit-form .column {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.edit-form input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.edit-form .submit-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.edit-form .submit-btn button {
+    padding: 12px 30px;
+    font-size: 1em;
+}
+
+/* Profile page specific styles */
+.profile-section {
+    padding: 20px;
+}
+
+.profile-section h3 {
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .edit-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .edit-form .column {
+        min-width: 100%;
+    }
+}
