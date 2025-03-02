@@ -3,26 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loyola Alumni Network - USA</title>
+    <title>Dashboard - Loyola Alumni Network</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <div id="header-placeholder"></div>
     <div class="container">
-        <div id="loginSection" class="login-section">
-            <div class="login-form">
-                <input type="email" id="username" placeholder="Email (Username)" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <div class="actions">
-                    <button onclick="login()">Login</button>
-                    <button onclick="window.location.href='/signup'">Signup</button>
-                </div>
-                <a href="/forgot-password">Forgot Password?</a>
-                <a href="#" onclick="resendVerificationEmail()">Resend Verification Email</a>
-            </div>
-        </div>
-        <div id="mainSection" class="hidden">
+        <div id="mainSection">
             <div class="search-form">
                 <input type="text" id="searchInput" placeholder="Search alumni..." onkeyup="searchAlumni()">
                 <button onclick="searchAlumni()">Search</button>
@@ -85,7 +73,7 @@
     </div>
     <div id="footer-placeholder"></div>
 
-    <script src="/load-common.js"></script>
+    <script src="/js/load-common.js"></script>
     <script>
         let userRole = null;
         let currentPage = 1;
@@ -94,22 +82,6 @@
         let expandedRow = null;
         let userEmail = '';
         let userRecordId = null;
-
-        // Utility function to show login section and hide main section
-        function showLoginSection() {
-            document.getElementById('loginSection').classList.remove('hidden');
-            document.getElementById('mainSection').classList.add('hidden');
-            document.getElementById('logoutButton').classList.add('hidden');
-            document.getElementById('profileLink').classList.add('hidden');
-        }
-
-        // Utility function to show main section and hide login section
-        function showMainSection() {
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('mainSection').classList.remove('hidden');
-            document.getElementById('logoutButton').classList.remove('hidden');
-            document.getElementById('profileLink').classList.remove('hidden');
-        }
 
         // Display alumni list in table
         function displayAlumni(data, totalPages) {
@@ -203,146 +175,54 @@
             }
         }
 
-        // Login
-        function login() {
-            let email = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            // Convert email to lowercase
-            email = email.toLowerCase();
-
-            fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    userRole = data.role;
-                    userEmail = data.email;
-                    localStorage.setItem('userRole', userRole);
-                    localStorage.setItem('userEmail', userEmail);
-                    localStorage.setItem('userName', data.name);
-
-                    // Update UI: show main section, hide login section
-                    showMainSection();
-                    document.getElementById('loggedInUser').textContent = `Welcome, ${data.name}`;
-
-                    if (userRole === 'admin') {
-                        document.getElementById('editForm').classList.remove('hidden');
-                    } else if (userRole === 'user') {
-                        // Check if user has an existing record
-                        fetch(`/api/alumni?userEmail=${encodeURIComponent(userEmail)}&action=getUserRecord`)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success && data.userRecord) {
-                                    // User has an existing record, show edit form
-                                    userRecordId = data.userRecord._id;
-                                    document.getElementById('editForm').classList.remove('hidden');
-                                    document.getElementById('formTitle').textContent = 'Edit Your Record';
-                                    document.getElementById('submitBtn').textContent = 'Update Record';
-                                    document.getElementById('submitBtn').onclick = () => updateAlumni(userRecordId);
-                                    document.getElementById('name').value = data.userRecord.name;
-                                    document.getElementById('location').value = data.userRecord.location;
-                                    document.getElementById('institute').value = data.userRecord.institute;
-                                    document.getElementById('course').value = data.userRecord.course;
-                                    document.getElementById('batchYear').value = data.userRecord.batchYear;
-                                    document.getElementById('currentOrg').value = data.userRecord.currentOrg;
-                                    document.getElementById('currentPosition').value = data.userRecord.currentPosition;
-                                    document.getElementById('pastExperience').value = data.userRecord.pastExperience;
-                                    document.getElementById('linkedin').value = data.userRecord.linkedin;
-                                    document.getElementById('email').value = data.userRecord.email;
-                                    document.getElementById('mobile').value = data.userRecord.mobile;
-                                    document.getElementById('otherDetails').value = data.userRecord.otherDetails;
-                                }
-                            });
-                    }
-                    fetchAlumni();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(err => {
-                console.error('Login fetch error:', err);
-                alert('Error during login: ' + err.message);
-            });
-        }
-
-        // Resend verification email
-        function resendVerificationEmail() {
-            let email = document.getElementById('username').value;
-            if (!email) {
-                alert('Please enter your email');
-                return;
-            }
-
-            // Convert email to lowercase
-            email = email.toLowerCase();
-
-            fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, action: 'resend-verification' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(err => {
-                alert('Error resending verification email');
-            });
-        }
-
-        // Check if user is already logged in
+        // Check if user is authenticated
         window.onload = function() {
             const storedRole = localStorage.getItem('userRole');
             let storedEmail = localStorage.getItem('userEmail');
             const storedName = localStorage.getItem('userName');
-            if (storedRole && storedEmail && storedName) {
-                // Convert stored email to lowercase
-                storedEmail = storedEmail.toLowerCase();
-
-                userRole = storedRole;
-                userEmail = storedEmail;
-                showMainSection();
-                document.getElementById('loggedInUser').textContent = `Welcome, ${storedName}`;
-                if (userRole === 'admin') {
-                    document.getElementById('editForm').classList.remove('hidden');
-                } else if (userRole === 'user') {
-                    // Check if user has an existing record
-                    fetch(`/api/alumni?userEmail=${encodeURIComponent(userEmail)}&action=getUserRecord`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success && data.userRecord) {
-                                userRecordId = data.userRecord._id;
-                                document.getElementById('editForm').classList.remove('hidden');
-                                document.getElementById('formTitle').textContent = 'Edit Your Record';
-                                document.getElementById('submitBtn').textContent = 'Update Record';
-                                document.getElementById('submitBtn').onclick = () => updateAlumni(userRecordId);
-                                document.getElementById('name').value = data.userRecord.name;
-                                document.getElementById('location').value = data.userRecord.location;
-                                document.getElementById('institute').value = data.userRecord.institute;
-                                document.getElementById('course').value = data.userRecord.course;
-                                document.getElementById('batchYear').value = data.userRecord.batchYear;
-                                document.getElementById('currentOrg').value = data.userRecord.currentOrg;
-                                document.getElementById('currentPosition').value = data.userRecord.currentPosition;
-                                document.getElementById('pastExperience').value = data.userRecord.pastExperience;
-                                document.getElementById('linkedin').value = data.userRecord.linkedin;
-                                document.getElementById('email').value = data.userRecord.email;
-                                document.getElementById('mobile').value = data.userRecord.mobile;
-                                document.getElementById('otherDetails').value = data.userRecord.otherDetails;
-                            }
-                        });
-                }
-                fetchAlumni();
-            } else {
-                showLoginSection();
+            if (!storedRole || !storedEmail || !storedName) {
+                window.location.href = '/login.html'; // Redirect to login if not authenticated
+                return;
             }
+
+            // Convert stored email to lowercase
+            storedEmail = storedEmail.toLowerCase();
+
+            userRole = storedRole;
+            userEmail = storedEmail;
+            const loggedInUser = document.getElementById('loggedInUser');
+            if (loggedInUser) {
+                loggedInUser.textContent = `Welcome, ${storedName}`;
+            }
+            if (userRole === 'admin') {
+                document.getElementById('editForm').classList.remove('hidden');
+            } else if (userRole === 'user') {
+                // Check if user has an existing record
+                fetch(`/api/alumni?userEmail=${encodeURIComponent(userEmail)}&action=getUserRecord`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.userRecord) {
+                            userRecordId = data.userRecord._id;
+                            document.getElementById('editForm').classList.remove('hidden');
+                            document.getElementById('formTitle').textContent = 'Edit Your Record';
+                            document.getElementById('submitBtn').textContent = 'Update Record';
+                            document.getElementById('submitBtn').onclick = () => updateAlumni(userRecordId);
+                            document.getElementById('name').value = data.userRecord.name;
+                            document.getElementById('location').value = data.userRecord.location;
+                            document.getElementById('institute').value = data.userRecord.institute;
+                            document.getElementById('course').value = data.userRecord.course;
+                            document.getElementById('batchYear').value = data.userRecord.batchYear;
+                            document.getElementById('currentOrg').value = data.userRecord.currentOrg;
+                            document.getElementById('currentPosition').value = data.userRecord.currentPosition;
+                            document.getElementById('pastExperience').value = data.userRecord.pastExperience;
+                            document.getElementById('linkedin').value = data.userRecord.linkedin;
+                            document.getElementById('email').value = data.userRecord.email;
+                            document.getElementById('mobile').value = data.userRecord.mobile;
+                            document.getElementById('otherDetails').value = data.userRecord.otherDetails;
+                        }
+                    });
+            }
+            fetchAlumni();
         };
 
         // Fetch alumni data with optional search term and page size
