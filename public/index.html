@@ -81,13 +81,10 @@
             flex: 1;
         }
         h2 {
-            color: #fff;
+            color: #0a2351; /* Reverted to previous color */
             text-align: center;
             margin-bottom: 20px;
             font-size: 1.5em;
-            background: #003087;
-            padding: 10px;
-            border-radius: 5px;
             font-weight: 500;
         }
         .hidden {
@@ -160,7 +157,8 @@
         }
         button.details-btn {
             background: #17a2b8;
-            padding: 6px 12px;
+            padding: 4px 8px; /* Smaller padding for smaller button */
+            font-size: 0.8em; /* Smaller font size */
         }
         button.details-btn:hover {
             background: #138496;
@@ -182,16 +180,15 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        th:nth-child(1), td:nth-child(1) { width: 12%; } /* Name */
-        th:nth-child(2), td:nth-child(2) { width: 12%; } /* Location */
-        th:nth-child(3), td:nth-child(3) { width: 12%; } /* Institute */
-        th:nth-child(4), td:nth-child(4) { width: 10%; } /* Course */
-        th:nth-child(5), td:nth-child(5) { width: 10%; } /* Batch Year */
-        th:nth-child(6), td:nth-child(6) { width: 12%; } /* Current Org */
-        th:nth-child(7), td:nth-child(7) { width: 10%; } /* Position */
-        th:nth-child(8), td:nth-child(8) { width: 10%; } /* Mobile */
-        th:nth-child(9), td:nth-child(9) { width: 12%; } /* Details */
-        th:nth-child(10), td:nth-child(10) { width: 10%; } /* Actions */
+        th:nth-child(1), td:nth-child(1) { width: 14%; } /* Name */
+        th:nth-child(2), td:nth-child(2) { width: 14%; } /* Location */
+        th:nth-child(3), td:nth-child(3) { width: 14%; } /* Institute */
+        th:nth-child(4), td:nth-child(4) { width: 12%; } /* Course */
+        th:nth-child(5), td:nth-child(5) { width: 12%; } /* Batch Year */
+        th:nth-child(6), td:nth-child(6) { width: 14%; } /* Current Org */
+        th:nth-child(7), td:nth-child(7) { width: 12%; } /* Position */
+        th:nth-child(8), td:nth-child(8) { width: 8%; } /* Details */
+        th:nth-child(9), td:nth-child(9) { width: 10%; } /* Actions */
         th {
             background: #003087;
             color: white;
@@ -366,7 +363,6 @@
                             <th>Batch Year</th>
                             <th>Current Org</th>
                             <th>Position</th>
-                            <th>Mobile</th>
                             <th>Details</th>
                             <th class="admin-column hidden">Actions</th>
                         </tr>
@@ -391,8 +387,8 @@
                             <input type="text" id="currentPosition" placeholder="Current Position" required>
                             <input type="text" id="pastExperience" placeholder="Past Experience">
                             <input type="text" id="linkedin" placeholder="LinkedIn Profile">
-                            <input type="text" id="mobile" placeholder="Mobile Number" required>
                             <input type="email" id="email" placeholder="Email" required>
+                            <input type="text" id="mobile" placeholder="Mobile Number" required>
                             <input type="text" id="otherDetails" placeholder="Other Details">
                         </div>
                     </div>
@@ -429,7 +425,6 @@
                     <td>${a.batchYear}</td>
                     <td>${a.currentOrg}</td>
                     <td>${a.currentPosition}</td>
-                    <td>${a.mobile}</td>
                     <td><button class="details-btn" onclick="toggleDetails('${a._id}')">Details</button></td>
                     ${userRole === 'admin' ? `
                         <td class="admin-column">
@@ -448,7 +443,7 @@
                 detailsRow.id = `details-${a._id}`;
                 detailsRow.classList.add('hidden');
                 detailsRow.innerHTML = `
-                    <td colspan="10">
+                    <td colspan="9">
                         <div class="details-content">
                             <p><strong>Name:</strong> ${a.name}</p>
                             <p><strong>Location:</strong> ${a.location}</p>
