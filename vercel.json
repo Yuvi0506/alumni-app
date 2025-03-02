@@ -5,6 +5,9 @@
     { "src": "/forgot-password", "dest": "/forgot-password.html" },
     { "src": "/reset-password", "dest": "/reset-password.html" },
     { "src": "/profile", "dest": "/profile.html" },
+    { "src": "/header.html", "dest": "/header.html" },
+    { "src": "/footer.html", "dest": "/footer.html" },
+    { "src": "/load-common.js", "dest": "/load-common.js" },
     { "src": "/styles.css", "dest": "/styles.css" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
