@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 // Load environment variables locally
@@ -52,6 +51,16 @@ transporter.verify((error, success) => {
     }
 });
 
+// Hash password using crypto (temporary)
+const hashPassword = (password) => {
+    return crypto.createHash('sha256').update(password).digest('hex');
+};
+
+// Compare password (temporary)
+const comparePassword = (password, hashedPassword) => {
+    return hashPassword(password) === hashedPassword;
+};
+
 module.exports = async (req, res) => {
     if (!process.env.MONGO_URI) {
         console.error('MONGO_URI not set');
@@ -73,7 +82,7 @@ module.exports = async (req, res) => {
                 }
 
                 const verificationToken = crypto.randomBytes(32).toString('hex');
-                const hashedPassword = await bcrypt.hash(password, 10);
+                const hashedPassword = hashPassword(password);
 
                 const newUser = new User({
                     email, // Already converted to lowercase
@@ -191,7 +200,7 @@ module.exports = async (req, res) => {
                     return res.status(400).json({ success: false, message: "Invalid or expired reset token" });
                 }
 
-                const hashedPassword = await bcrypt.hash(newPassword, 10);
+                const hashedPassword = hashPassword(newPassword);
                 user.password = hashedPassword;
                 user.resetToken = undefined;
                 user.resetTokenExpiry = undefined;
@@ -261,7 +270,7 @@ module.exports = async (req, res) => {
                     return res.status(403).json({ success: false, message: "Please verify your email before logging in" });
                 }
 
-                const isPasswordValid = await bcrypt.compare(password, user.password);
+                const isPasswordValid = comparePassword(password, user.password);
                 if (!isPasswordValid) {
                     console.log(`Login failed: Incorrect password for email ${email}`);
                     return res.status(401).json({ success: false, message: "Invalid credentials" });
