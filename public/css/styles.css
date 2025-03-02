@@ -244,7 +244,7 @@ a:hover {
 .login-form .actions {
     display: flex;
     gap: 15px;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
