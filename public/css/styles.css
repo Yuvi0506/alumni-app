@@ -1,0 +1,553 @@
+/* Shared styles for all pages */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+    color: #333333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    background: #003087;
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #f5c518;
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header img.logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    object-fit: contain;
+    display: block;
+}
+
+/* Fallback if logo fails to load */
+.header img.logo[src=""]::before,
+.header img.logo:not([src])::before {
+    content: "LAA";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    color: #003087;
+    font-weight: bold;
+    font-size: 1.2em;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 500;
+}
+
+.header p {
+    margin: 5px 0 0;
+    font-size: 0.85em;
+    font-style: italic;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 0.9em;
+    flex-wrap: wrap;
+}
+
+.user-info .user-icon {
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.user-info button,
+.user-info a {
+    padding: 6px 12px;
+    background: #dc3545;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #fff;
+    text-decoration: none;
+}
+
+.user-info button:hover,
+.user-info a:hover {
+    background: #c82333;
+}
+
+footer {
+    background: #003087;
+    color: #fff;
+    padding: 15px 20px;
+    text-align: center;
+    border-top: 3px solid #f5c518;
+    font-size: 0.9em;
+    font-weight: 400;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: auto;
+}
+
+footer p {
+    margin: 0;
+}
+
+h3 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    background: #003087;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: 300;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+}
+
+.hidden {
+    display: none !important;
+}
+
+input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: #003087;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 48, 135, 0.3);
+}
+
+button {
+    padding: 12px;
+    background: #003087;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.1s;
+}
+
+button:hover {
+    background: #005566;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+a {
+    color: #003087;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #f5c518;
+}
+
+/* Optimized styles for login, signup, forgot password, reset password, and other pages */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+}
+
+.login-page, .signup-page, .verify-email-page, .forgot-password-page, .reset-password-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 200px);
+}
+
+.login-form, .signup-form, .verify-email, .forgot-password-form, .reset-password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    width: 90%;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s;
+}
+
+.login-form:hover, .signup-form:hover, .verify-email:hover, .forgot-password-form:hover, .reset-password-form:hover {
+    transform: translateY(-5px);
+}
+
+.login-form .actions {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.signup-form a, .verify-email a, .forgot-password-form a, .reset-password-form a {
+    color: #003087;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+.signup-form a:hover, .verify-email a:hover, .forgot-password-form a:hover, .reset-password-form a:hover {
+    color: #f5c518;
+}
+
+.verify-email, .forgot-password-form, .reset-password-form {
+    text-align: center;
+}
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.search-form input {
+    width: 300px;
+    max-width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    font-size: 1em;
+}
+
+.search-form button {
+    padding: 12px 20px;
+    background: #003087;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+}
+
+.search-form button:hover {
+    background: #005566;
+}
+
+.search-form select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+button.details-btn {
+    background: #17a2b8;
+    padding: 6px 12px;
+    font-size: 0.9em;
+}
+
+button.details-btn:hover {
+    background: #138496;
+}
+
+.alumni-list {
+    margin: 20px 0;
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    table-layout: auto;
+    min-width: 800px;
+}
+
+th, td {
+    padding: 10px 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+th:nth-child(1), td:nth-child(1) { width: 15%; }
+th:nth-child(2), td:nth-child(2) { width: 15%; }
+th:nth-child(3), td:nth-child(3) { width: 15%; }
+th:nth-child(4), td:nth-child(4) { width: 12%; }
+th:nth-child(5), td:nth-child(5) { width: 12%; }
+th:nth-child(6), td:nth-child(6) { width: 15%; }
+th:nth-child(7), td:nth-child(7) { width: 12%; }
+th:nth-child(8), td:nth-child(8) { width: 6%; }
+th:nth-child(9), td:nth-child(9) { width: 8%; }
+
+th {
+    background: #003087;
+    color: white;
+    font-weight: 500;
+}
+
+tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+tr:hover {
+    background: #e9ecef;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.admin-actions button {
+    padding: 6px 8px;
+    font-size: 0.8em;
+    margin-right: 0;
+}
+
+.admin-actions button.edit {
+    background: #28a745;
+}
+
+.admin-actions button.delete {
+    background: #dc3545;
+}
+
+.admin-actions button.edit:hover {
+    background: #218838;
+}
+
+.admin-actions button.delete:hover {
+    background: #c82333;
+}
+
+.details-row {
+    background: #f8f9fa;
+    border-bottom: 2px solid #ddd;
+}
+
+.details-row td {
+    padding: 15px;
+    white-space: normal;
+}
+
+.details-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.details-content p {
+    margin: 5px 0;
+    flex: 1 1 45%;
+}
+
+.details-content p strong {
+    color: #003087;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.pagination button {
+    padding: 10px 15px;
+    background: #ddd;
+    color: #333333;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.pagination button.active {
+    background: #003087;
+    color: white;
+}
+
+.edit-form-container {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    width: 100%;
+}
+
+.edit-form {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.edit-form .column {
+    flex: 1;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.edit-form input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.edit-form .submit-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.edit-form .submit-btn button {
+    padding: 12px 40px;
+    font-size: 1em;
+}
+
+.profile-section {
+    padding: 25px;
+    width: 100%;
+}
+
+.profile-section h3 {
+    margin-top: 25px;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 8px;
+    }
+
+    .user-info {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .container {
+        margin: 10px;
+        padding: 15px;
+        min-height: calc(100vh - 250px);
+    }
+
+    .login-form, .signup-form, .verify-email, .forgot-password-form, .reset-password-form {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .search-form input {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .edit-form {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .edit-form .column {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.2em;
+    }
+
+    .header p {
+        font-size: 0.75em;
+    }
+
+    .user-info {
+        gap: 5px;
+    }
+
+    .user-info button,
+    .user-info a {
+        padding: 5px 10px;
+        font-size: 0.85em;
+    }
+
+    table {
+        font-size: 0.8em;
+    }
+
+    th, td {
+        padding: 8px 4px;
+    }
+}
