@@ -2,6 +2,9 @@
   "routes": [
     { "src": "/signup", "dest": "/signup.html" },
     { "src": "/verify-email", "dest": "/verify-email.html" },
+    { "src": "/forgot-password", "dest": "/forgot-password.html" },
+    { "src": "/reset-password", "dest": "/reset-password.html" },
+    { "src": "/profile", "dest": "/profile.html" },
     { "src": "/styles.css", "dest": "/styles.css" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
