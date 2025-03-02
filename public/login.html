@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Loyola Alumni Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="login-page">
+    <div id="header-placeholder"></div>
+    <div class="container">
+        <div class="login-form">
+            <input type="email" id="username" placeholder="Email (Username)" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <div class="actions">
+                <button onclick="login()">Login</button>
+                <button onclick="window.location.href='/html/signup.html'">Signup</button>
+            </div>
+            <a href="/html/forgot-password.html">Forgot Password?</a>
+            <a href="#" onclick="resendVerificationEmail()">Resend Verification Email</a>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
 
+    <script src="/js/load-common.js"></script>
+    <script>
+        // Redirect to index.html if already logged in
+        window.onload = function() {
+            const storedRole = localStorage.getItem('userRole');
+            const storedEmail = localStorage.getItem('userEmail');
+            const storedName = localStorage.getItem('userName');
+            if (storedRole && storedEmail && storedName) {
+                window.location.href = '/html/index.html';
+            }
+        };
+
+        // Login
+        function login() {
+            let email = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Convert email to lowercase
+            email = email.toLowerCase();
+
+            fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('userRole', data.role);
+                    localStorage.setItem('userEmail', data.email);
+                    localStorage.setItem('userName', data.name);
+                    window.location.href = '/html/index.html'; // Redirect to main page
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                console.error('Login fetch error:', err);
+                alert('Error during login: ' + err.message);
+            });
+        }
+
+        // Resend verification email
+        function resendVerificationEmail() {
+            let email = document.getElementById('username').value;
+            if (!email) {
+                alert('Please enter your email');
+                return;
+            }
+
+            // Convert email to lowercase
+            email = email.toLowerCase();
+
+            fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, action: 'resend-verification' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                alert('Error resending verification email');
+            });
+        }
+    </script>
+</body>
+</html>
