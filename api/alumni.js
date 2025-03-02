@@ -28,7 +28,7 @@ const alumniSchema = new mongoose.Schema({
     pastExperience: { type: String, default: "None" },
     linkedin: { type: String, default: "Not provided" },
     mobile: { type: String, required: true },
-    email: { type: String, required: true }, // New Email field
+    email: { type: String, required: true },
     otherDetails: { type: String, default: "None" }
 });
 
@@ -43,6 +43,7 @@ module.exports = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5;
         const search = req.query.search || '';
+        const userEmail = req.query.userEmail || '';
         const skip = (page - 1) * limit;
 
         try {
@@ -58,10 +59,16 @@ module.exports = async (req, res) => {
                     { pastExperience: { $regex: search, $options: 'i' } },
                     { linkedin: { $regex: search, $options: 'i' } },
                     { mobile: { $regex: search, $options: 'i' } },
-                    { email: { $regex: search, $options: 'i' } }, // Include Email in search
+                    { email: { $regex: search, $options: 'i' } },
                     { otherDetails: { $regex: search, $options: 'i' } }
                 ]
             } : {};
+
+            if (userEmail && req.query.action === 'getUserRecord') {
+                // Fetch the user's own record for editing
+                const userRecord = await Alumni.findOne({ email: userEmail });
+                return res.status(200).json({ success: true, userRecord });
+            }
 
             const alumni = await Alumni.find(searchQuery).skip(skip).limit(limit);
             const total = await Alumni.countDocuments(searchQuery);
@@ -76,7 +83,7 @@ module.exports = async (req, res) => {
     } else if (req.method === 'POST') {
         const { name, location, institute, course, batchYear, currentOrg, currentPosition, pastExperience, linkedin, mobile, email, otherDetails, role } = req.body;
         if (role !== 'admin') {
-            return res.status(403).json({ success: false, message: "Admin access required" });
+            return res.status(403).json({ success: false, message: "Admin access required to add new alumni" });
         }
         if (name && location && institute && course && batchYear && currentOrg && currentPosition && mobile && email) {
             const newAlumni = new Alumni({
@@ -90,18 +97,29 @@ module.exports = async (req, res) => {
             res.status(400).json({ success: false, message: "Required fields missing" });
         }
     } else if (req.method === 'PUT') {
-        const { role, ...updates } = req.body;
-        if (role !== 'admin') {
-            return res.status(403).json({ success: false, message: "Admin access required" });
-        }
+        const { role, email, ...updates } = req.body;
+        const id = req.query.id;
+
         try {
-            const alumni = await Alumni.findByIdAndUpdate(req.query.id, updates, { new: true });
-            if (alumni) {
-                const allAlumni = await Alumni.find();
-                res.status(200).json({ success: true, alumni: allAlumni });
-            } else {
-                res.status(404).json({ success: false, message: "Alumni not found" });
+            const alumni = await Alumni.findById(id);
+            if (!alumni) {
+                return res.status(404).json({ success: false, message: "Alumni not found" });
             }
+
+            // Admin can edit any record, users can only edit their own record
+            if (role === 'admin') {
+                await Alumni.findByIdAndUpdate(id, updates, { new: true });
+            } else if (role === 'user') {
+                if (alumni.email !== email) {
+                    return res.status(403).json({ success: false, message: "You can only edit your own record" });
+                }
+                await Alumni.findByIdAndUpdate(id, updates, { new: true });
+            } else {
+                return res.status(403).json({ success: false, message: "Unauthorized" });
+            }
+
+            const allAlumni = await Alumni.find();
+            res.status(200).json({ success: true, alumni: allAlumni });
         } catch (err) {
             res.status(500).json({ success: false, message: "Server error" });
         }
