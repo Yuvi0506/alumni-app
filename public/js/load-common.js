@@ -13,16 +13,18 @@ const publicPaths = [
     '/html/reset-password.html'
 ];
 
-// Check if the current page requires authentication
-if (!publicPaths.includes(window.location.pathname)) {
-    const storedRole = localStorage.getItem('userRole');
-    const storedEmail = localStorage.getItem('userEmail');
-    const storedName = localStorage.getItem('userName');
-    if (!storedRole || !storedEmail || !storedName) {
-        window.location.href = '/login.html'; // Redirect to login if not authenticated
-        return;
+// Immediate authentication check
+(function() {
+    if (!publicPaths.includes(window.location.pathname)) {
+        const storedRole = localStorage.getItem('userRole');
+        const storedEmail = localStorage.getItem('userEmail');
+        const storedName = localStorage.getItem('userName');
+        if (!storedRole || !storedEmail || !storedName) {
+            window.location.href = '/login.html'; // Redirect to login if not authenticated
+            return;
+        }
     }
-}
+})();
 
 // Load header
 fetch('/html/header.html')
