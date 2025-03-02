@@ -8,24 +8,15 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body class="verify-email-page">
-    <div class="header">
-        <div class="header-left">
-            <img src="logo.png" alt="LAA Logo" class="logo">
-            <div>
-                <h1>Loyola Alumni Network - USA</h1>
-                <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
-            </div>
-        </div>
-    </div>
+    <div id="header-placeholder"></div>
     <div class="verify-email">
         <p>Please check your email to verify your account.</p>
         <p>Didn't receive an email? <button onclick="resendVerification()">Resend Email</button></p>
         <a href="/index.html">Back to Login</a>
     </div>
-    <footer>
-        <p>©2025 Loyola Alumni Network - USA. All rights reserved.</p>
-    </footer>
+    <div id="footer-placeholder"></div>
 
+    <script src="/load-common.js"></script>
     <script>
         // Get email from URL query parameter
         const urlParams = new URLSearchParams(window.location.search);
