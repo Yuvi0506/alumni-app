@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 // Load environment variables locally
@@ -43,8 +43,18 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// Verify email transport configuration
+transporter.verify((error, success) => {
+    if (error) {
+        console.error('Email transport verification failed:', error);
+    } else {
+        console.log('Email transport is ready to send messages');
+    }
+});
+
 module.exports = async (req, res) => {
     if (!process.env.MONGO_URI) {
+        console.error('MONGO_URI not set');
         return res.status(500).json({ success: false, message: "MONGO_URI not set" });
     }
 
@@ -56,6 +66,7 @@ module.exports = async (req, res) => {
             try {
                 const existingUser = await User.findOne({ email });
                 if (existingUser) {
+                    console.log(`Signup failed: Email ${email} already exists`);
                     return res.status(400).json({ success: false, message: "Email already exists" });
                 }
 
@@ -69,7 +80,10 @@ module.exports = async (req, res) => {
                     verificationToken
                 });
                 await newUser.save();
+                console.log(`User ${email} successfully added to database`);
 
+                // Attempt to send verification email
+                let emailSent = false;
                 const verificationLink = `${req.headers.origin}/verify-email?token=${verificationToken}&email=${email}`;
                 const mailOptions = {
                     from: process.env.EMAIL_USER,
@@ -82,33 +96,50 @@ module.exports = async (req, res) => {
                         <p>If you did not sign up, please ignore this email.</p>
                     `
                 };
-                await transporter.sendMail(mailOptions);
 
-                res.status(200).json({ success: true, message: "Signup successful. Please check your email to verify." });
+                try {
+                    await transporter.sendMail(mailOptions);
+                    console.log(`Verification email sent to ${email}`);
+                    emailSent = true;
+                } catch (emailErr) {
+                    console.error(`Failed to send verification email to ${email}:`, emailErr);
+                }
+
+                if (emailSent) {
+                    res.status(200).json({ success: true, message: "Signup successful. Please check your email to verify." });
+                } else {
+                    res.status(200).json({
+                        success: true,
+                        message: "Signup successful, but failed to send verification email. Please use the 'Resend Verification Email' option on the login page."
+                    });
+                }
             } catch (err) {
+                console.error('Signup error:', err);
                 res.status(500).json({ success: false, message: "Server error during signup" });
             }
         } else if (action === 'verify') {
-            // Handle email verification
             try {
                 const user = await User.findOne({ email, verificationToken: token });
                 if (!user) {
+                    console.log(`Verification failed: Invalid token for email ${email}`);
                     return res.status(400).json({ success: false, message: "Invalid verification token" });
                 }
 
                 user.isVerified = true;
                 user.verificationToken = undefined;
                 await user.save();
+                console.log(`Email ${email} verified successfully`);
 
                 res.status(200).json({ success: true, message: "Email verified successfully" });
             } catch (err) {
+                console.error('Verification error:', err);
                 res.status(500).json({ success: false, message: "Server error during verification" });
             }
         } else if (action === 'forgot-password') {
-            // Handle forgot password request
             try {
                 const user = await User.findOne({ email });
                 if (!user) {
+                    console.log(`Forgot password failed: User not found for email ${email}`);
                     return res.status(404).json({ success: false, message: "User not found" });
                 }
 
@@ -116,6 +147,7 @@ module.exports = async (req, res) => {
                 user.resetToken = resetToken;
                 user.resetTokenExpiry = Date.now() + 3600000; // 1 hour expiry
                 await user.save();
+                console.log(`Reset token generated for ${email}`);
 
                 const resetLink = `${req.headers.origin}/reset-password?token=${resetToken}&email=${email}`;
                 const mailOptions = {
@@ -129,14 +161,23 @@ module.exports = async (req, res) => {
                         <p>This link will expire in 1 hour. If you did not request a password reset, please ignore this email.</p>
                     `
                 };
-                await transporter.sendMail(mailOptions);
 
-                res.status(200).json({ success: true, message: "Password reset link sent to your email." });
+                try {
+                    await transporter.sendMail(mailOptions);
+                    console.log(`Password reset email sent to ${email}`);
+                    res.status(200).json({ success: true, message: "Password reset link sent to your email." });
+                } catch (emailErr) {
+                    console.error(`Failed to send password reset email to ${email}:`, emailErr);
+                    res.status(200).json({
+                        success: true,
+                        message: "Password reset link generated, but failed to send email. Please try again or contact support."
+                    });
+                }
             } catch (err) {
+                console.error('Forgot password error:', err);
                 res.status(500).json({ success: false, message: "Server error during forgot password request" });
             }
         } else if (action === 'reset-password') {
-            // Handle password reset
             try {
                 const user = await User.findOne({
                     email,
@@ -144,6 +185,7 @@ module.exports = async (req, res) => {
                     resetTokenExpiry: { $gt: Date.now() }
                 });
                 if (!user) {
+                    console.log(`Password reset failed: Invalid or expired token for email ${email}`);
                     return res.status(400).json({ success: false, message: "Invalid or expired reset token" });
                 }
 
@@ -152,25 +194,29 @@ module.exports = async (req, res) => {
                 user.resetToken = undefined;
                 user.resetTokenExpiry = undefined;
                 await user.save();
+                console.log(`Password reset successfully for ${email}`);
 
                 res.status(200).json({ success: true, message: "Password reset successfully" });
             } catch (err) {
+                console.error('Password reset error:', err);
                 res.status(500).json({ success: false, message: "Server error during password reset" });
             }
         } else if (action === 'resend-verification') {
-            // Handle resend verification email
             try {
                 const user = await User.findOne({ email });
                 if (!user) {
+                    console.log(`Resend verification failed: User not found for email ${email}`);
                     return res.status(404).json({ success: false, message: "User not found" });
                 }
                 if (user.isVerified) {
+                    console.log(`Resend verification failed: Email ${email} already verified`);
                     return res.status(400).json({ success: false, message: "Email already verified" });
                 }
 
                 const verificationToken = crypto.randomBytes(32).toString('hex');
                 user.verificationToken = verificationToken;
                 await user.save();
+                console.log(`New verification token generated for ${email}`);
 
                 const verificationLink = `${req.headers.origin}/verify-email?token=${verificationToken}&email=${email}`;
                 const mailOptions = {
@@ -184,10 +230,20 @@ module.exports = async (req, res) => {
                         <p>If you did not sign up, please ignore this email.</p>
                     `
                 };
-                await transporter.sendMail(mailOptions);
 
-                res.status(200).json({ success: true, message: "Verification email resent. Please check your inbox." });
+                try {
+                    await transporter.sendMail(mailOptions);
+                    console.log(`Verification email resent to ${email}`);
+                    res.status(200).json({ success: true, message: "Verification email resent. Please check your inbox." });
+                } catch (emailErr) {
+                    console.error(`Failed to resend verification email to ${email}:`, emailErr);
+                    res.status(200).json({
+                        success: true,
+                        message: "Verification email prepared, but failed to send. Please try again or contact support."
+                    });
+                }
             } catch (err) {
+                console.error('Resend verification error:', err);
                 res.status(500).json({ success: false, message: "Server error during resend verification" });
             }
         } else {
@@ -195,26 +251,34 @@ module.exports = async (req, res) => {
             try {
                 const user = await User.findOne({ email });
                 if (!user) {
+                    console.log(`Login failed: User not found for email ${email}`);
                     return res.status(401).json({ success: false, message: "Invalid credentials" });
                 }
 
                 if (!user.isVerified) {
+                    console.log(`Login failed: Email ${email} not verified`);
                     return res.status(403).json({ success: false, message: "Please verify your email before logging in" });
                 }
 
                 const isPasswordValid = await bcrypt.compare(password, user.password);
                 if (!isPasswordValid) {
+                    console.log(`Login failed: Incorrect password for email ${email}`);
                     return res.status(401).json({ success: false, message: "Invalid credentials" });
                 }
 
                 if (email === "admin" && password === "edit2025") {
                     user.role = 'admin';
+                    console.log(`Admin login successful for ${email}`);
                 } else if (email === "user" && password === "view2025") {
                     user.role = 'user';
+                    console.log(`User login successful for ${email}`);
+                } else {
+                    console.log(`Regular user login successful for ${email}`);
                 }
 
                 res.status(200).json({ success: true, role: user.role, email: user.email, name: user.name });
             } catch (err) {
+                console.error('Login error:', err);
                 res.status(500).json({ success: false, message: "Server error during login" });
             }
         }
