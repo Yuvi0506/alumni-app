@@ -43,8 +43,11 @@ module.exports = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5;
         const search = req.query.search || '';
-        const userEmail = req.query.userEmail || '';
+        let userEmail = req.query.userEmail || '';
         const skip = (page - 1) * limit;
+
+        // Convert userEmail to lowercase for case-insensitive matching
+        if (userEmail) userEmail = userEmail.toLowerCase();
 
         try {
             const searchQuery = search ? {
@@ -81,7 +84,10 @@ module.exports = async (req, res) => {
             res.status(500).json({ success: false, message: "Server error" });
         }
     } else if (req.method === 'POST') {
-        const { name, location, institute, course, batchYear, currentOrg, currentPosition, pastExperience, linkedin, mobile, email, otherDetails, role } = req.body;
+        let { name, location, institute, course, batchYear, currentOrg, currentPosition, pastExperience, linkedin, mobile, email, otherDetails, role } = req.body;
+        // Convert email to lowercase
+        if (email) email = email.toLowerCase();
+
         if (role !== 'admin') {
             return res.status(403).json({ success: false, message: "Admin access required to add new alumni" });
         }
@@ -97,8 +103,11 @@ module.exports = async (req, res) => {
             res.status(400).json({ success: false, message: "Required fields missing" });
         }
     } else if (req.method === 'PUT') {
-        const { role, email, ...updates } = req.body;
+        let { role, email, ...updates } = req.body;
         const id = req.query.id;
+
+        // Convert email to lowercase
+        if (email) email = email.toLowerCase();
 
         try {
             const alumni = await Alumni.findById(id);
@@ -108,12 +117,12 @@ module.exports = async (req, res) => {
 
             // Admin can edit any record, users can only edit their own record
             if (role === 'admin') {
-                await Alumni.findByIdAndUpdate(id, updates, { new: true });
+                await Alumni.findByIdAndUpdate(id, { ...updates, email }, { new: true });
             } else if (role === 'user') {
                 if (alumni.email !== email) {
                     return res.status(403).json({ success: false, message: "You can only edit your own record" });
                 }
-                await Alumni.findByIdAndUpdate(id, updates, { new: true });
+                await Alumni.findByIdAndUpdate(id, { ...updates, email }, { new: true });
             } else {
                 return res.status(403).json({ success: false, message: "Unauthorized" });
             }
