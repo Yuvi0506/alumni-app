@@ -16,24 +16,33 @@ const publicPaths = [
 // Prevent redirect loop by checking if already redirecting
 let isRedirecting = false;
 
-// Immediate authentication check
+// Immediate authentication check with logging
 (function() {
-    if (isRedirecting) return;
+    if (isRedirecting) {
+        console.log('Already redirecting, skipping authentication check.');
+        return;
+    }
+
+    console.log('Current path:', window.location.pathname);
 
     // Skip authentication check for public paths
     if (publicPaths.includes(window.location.pathname)) {
+        console.log('Public path, no redirect needed:', window.location.pathname);
         return;
     }
 
     // Check authentication
+    console.log('Checking authentication...');
     const storedRole = localStorage.getItem('userRole');
     const storedEmail = localStorage.getItem('userEmail');
     const storedName = localStorage.getItem('userName');
     if (!storedRole || !storedEmail || !storedName) {
+        console.log('User not authenticated, redirecting to /login.html');
         isRedirecting = true;
         window.location.replace('/login.html'); // Use replace to avoid history stack issues
         return;
     }
+    console.log('User authenticated, proceeding to load page.');
 })();
 
 // Load header

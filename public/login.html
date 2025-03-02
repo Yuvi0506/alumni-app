@@ -25,12 +25,22 @@
 
     <script src="/js/load-common.js"></script>
     <script>
-        // Login
+        // Redirect to index.html if already logged in
+        console.log('Login page loaded, checking authentication state...');
+        const storedRole = localStorage.getItem('userRole');
+        const storedEmail = localStorage.getItem('userEmail');
+        const storedName = localStorage.getItem('userName');
+        if (storedRole && storedEmail && storedName) {
+            console.log('User already logged in, redirecting to /html/index.html');
+            window.location.replace('/html/index.html');
+        } else {
+            console.log('User not logged in, rendering login page.');
+        }
+
         function login() {
             let email = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Convert email to lowercase
             email = email.toLowerCase();
 
             fetch('/api/login', {
@@ -55,7 +65,6 @@
             });
         }
 
-        // Resend verification email
         function resendVerificationEmail() {
             let email = document.getElementById('username').value;
             if (!email) {
@@ -63,7 +72,6 @@
                 return;
             }
 
-            // Convert email to lowercase
             email = email.toLowerCase();
 
             fetch('/api/login', {
