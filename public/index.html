@@ -4,23 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loyola Alumni Network - USA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background: #f5f5f5;
-            color: #0a2351;
+            color: #333333;
         }
         .header {
-            background: #0a2351;
+            background: #003087;
             color: #fff;
             padding: 15px 20px;
-            border-bottom: 5px solid #ffc107;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 3px solid #f5c518;
         }
         .header-left {
             display: flex;
@@ -33,7 +33,7 @@
         .header h1 {
             margin: 0;
             font-size: 1.8em;
-            font-weight: 600;
+            font-weight: 500;
         }
         .header p {
             margin: 5px 0 0;
@@ -63,26 +63,28 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 0.9em;
+            color: #fff;
         }
         .user-info button:hover {
             background: #c82333;
         }
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 20px auto;
             padding: 15px;
             background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         h2 {
             color: #fff;
             text-align: center;
             margin-bottom: 20px;
             font-size: 1.5em;
-            background: #0a2351;
+            background: #003087;
             padding: 10px;
-            border-radius: 6px;
+            border-radius: 5px;
+            font-weight: 500;
         }
         .hidden {
             display: none;
@@ -104,54 +106,53 @@
         .search-form input {
             width: 300px;
             padding: 10px;
-            border: 2px solid #0a2351;
-            border-radius: 6px 0 0 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
             font-size: 0.9em;
         }
         .search-form button {
             padding: 10px 15px;
-            background: #0a2351;
+            background: #003087;
             color: white;
             border: none;
-            border-radius: 0 6px 6px 0;
+            border-radius: 0 5px 5px 0;
             cursor: pointer;
             font-size: 0.9em;
             transition: background 0.3s;
         }
         .search-form button:hover {
-            background: #1a3c78;
+            background: #005566;
         }
         .search-form select {
             padding: 10px;
-            border: 2px solid #0a2351;
-            border-radius: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
             font-size: 0.9em;
         }
         input {
             padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
             font-size: 0.9em;
             transition: border-color 0.3s;
         }
         input:focus {
-            border-color: #0a2351;
+            border-color: #003087;
             outline: none;
         }
         button {
             padding: 10px;
-            background: #0a2351;
+            background: #003087;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 0.9em;
-            font-weight: 600;
-            transition: background 0.3s, transform 0.2s;
+            font-weight: 500;
+            transition: background 0.3s;
         }
         button:hover {
-            background: #1a3c78;
-            transform: translateY(-1px);
+            background: #005566;
         }
         button.details-btn {
             background: #17a2b8;
@@ -166,11 +167,11 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85em;
+            font-size: 0.9em;
             table-layout: fixed;
         }
         th, td {
-            padding: 8px 6px;
+            padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
             overflow: hidden;
@@ -188,9 +189,9 @@
         th:nth-child(9), td:nth-child(9) { width: 12%; } /* Details */
         th:nth-child(10), td:nth-child(10) { width: 10%; } /* Actions */
         th {
-            background: #0a2351;
+            background: #003087;
             color: white;
-            font-weight: 600;
+            font-weight: 500;
         }
         tr:nth-child(even) {
             background: #f8f9fa;
@@ -199,12 +200,12 @@
             background: #e9ecef;
         }
         a {
-            color: #ffc107;
+            color: #003087;
             text-decoration: none;
             transition: color 0.3s;
         }
         a:hover {
-            color: #ff8c00;
+            color: #f5c518;
         }
         .admin-actions button {
             padding: 5px 8px;
@@ -224,7 +225,7 @@
             background: #c82333;
         }
         .details-row {
-            background: #f1f3f5;
+            background: #f8f9fa;
             border-bottom: 2px solid #ddd;
         }
         .details-row td {
@@ -241,7 +242,7 @@
             flex: 1 1 45%;
         }
         .details-content p strong {
-            color: #0a2351;
+            color: #003087;
         }
         .pagination {
             display: flex;
@@ -252,11 +253,11 @@
         .pagination button {
             padding: 8px 12px;
             background: #ddd;
-            color: #0a2351;
+            color: #333333;
             border-radius: 5px;
         }
         .pagination button.active {
-            background: #0a2351;
+            background: #003087;
             color: white;
         }
         .edit-form-container {
