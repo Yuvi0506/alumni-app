@@ -110,7 +110,6 @@
                 `;
                 list.appendChild(row);
 
-                // Add details row (hidden by default)
                 const detailsRow = document.createElement('tr');
                 detailsRow.classList.add('details-row');
                 detailsRow.id = `details-${a._id}`;
@@ -136,7 +135,6 @@
                 list.appendChild(detailsRow);
             });
 
-            // Show admin column only for admin users
             const adminColumn = document.querySelectorAll('.admin-column');
             adminColumn.forEach(col => {
                 if (userRole === 'admin') {
@@ -149,7 +147,6 @@
             renderPagination(totalPages);
         }
 
-        // Toggle details view
         function toggleDetails(id) {
             const detailsRow = document.getElementById(`details-${id}`);
             if (expandedRow && expandedRow !== detailsRow) {
@@ -159,7 +156,6 @@
             expandedRow = detailsRow.classList.contains('hidden') ? null : detailsRow;
         }
 
-        // Render pagination
         function renderPagination(totalPages) {
             const pagination = document.getElementById('pagination');
             pagination.innerHTML = '';
@@ -175,17 +171,15 @@
             }
         }
 
-        // Check if user is authenticated
         window.onload = function() {
             const storedRole = localStorage.getItem('userRole');
             let storedEmail = localStorage.getItem('userEmail');
             const storedName = localStorage.getItem('userName');
             if (!storedRole || !storedEmail || !storedName) {
-                window.location.href = '/login.html'; // Redirect to login if not authenticated
+                window.location.href = '/login.html';
                 return;
             }
 
-            // Convert stored email to lowercase
             storedEmail = storedEmail.toLowerCase();
 
             userRole = storedRole;
@@ -197,7 +191,6 @@
             if (userRole === 'admin') {
                 document.getElementById('editForm').classList.remove('hidden');
             } else if (userRole === 'user') {
-                // Check if user has an existing record
                 fetch(`/api/alumni?userEmail=${encodeURIComponent(userEmail)}&action=getUserRecord`)
                     .then(response => response.json())
                     .then(data => {
@@ -225,34 +218,33 @@
             fetchAlumni();
         };
 
-        // Fetch alumni data with optional search term and page size
         function fetchAlumni() {
             const query = searchTerm 
                 ? `?page=${currentPage}&limit=${itemsPerPage}&search=${encodeURIComponent(searchTerm)}` 
                 : `?page=${currentPage}&limit=${itemsPerPage}`;
-            fetch(`/api/alumni${query}`)
+            fetch(`/api/alumni${query}`, {
+                headers: {
+                    'x-authenticated': localStorage.getItem('userRole') ? 'true' : 'false'
+                }
+            })
                 .then(response => response.json())
                 .then(data => displayAlumni(data.alumni, data.pages));
         }
 
-        // Search alumni
         function searchAlumni() {
             searchTerm = document.getElementById('searchInput').value.trim();
-            currentPage = 1; // Reset to first page on new search
+            currentPage = 1;
             fetchAlumni();
         }
 
-        // Update page size
         function updatePageSize() {
             itemsPerPage = parseInt(document.getElementById('pageSize').value);
-            currentPage = 1; // Reset to first page on page size change
+            currentPage = 1;
             fetchAlumni();
         }
 
-        // Add new alumni (admin only)
         function addAlumni() {
             let email = document.getElementById('email').value;
-            // Convert email to lowercase
             email = email.toLowerCase();
 
             const alumni = {
@@ -287,7 +279,6 @@
             });
         }
 
-        // Edit alumni
         function editAlumni(id) {
             fetch('/api/alumni')
                 .then(response => response.json())
@@ -314,10 +305,8 @@
                 });
         }
 
-        // Update alumni
         function updateAlumni(id) {
             let email = document.getElementById('email').value;
-            // Convert email to lowercase
             email = email.toLowerCase();
 
             const alumni = {
@@ -360,7 +349,6 @@
             });
         }
 
-        // Remove alumni (admin only)
         function removeAlumni(id) {
             if (confirm('Are you sure you want to delete this alumni record?')) {
                 fetch(`/api/alumni?id=${id}`, {
