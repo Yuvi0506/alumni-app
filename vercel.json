@@ -7,7 +7,7 @@
     { "src": "/reset-password", "dest": "/html/reset-password.html" },
     { "src": "/profile", "dest": "/html/profile.html" },
     { "src": "/html/index.html", "dest": "/html/index.html" },
-    { "src": "/html/signup.html", "dest": "/html/signup.html" },  // Add explicit route for direct access
+    { "src": "/html/signup.html", "dest": "/html/signup.html" },
     { "src": "/html/profile.html", "dest": "/html/profile.html" },
     { "src": "/html/header.html", "dest": "/html/header.html" },
     { "src": "/html/footer.html", "dest": "/html/footer.html" },
