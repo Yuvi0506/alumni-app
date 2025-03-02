@@ -32,5 +32,6 @@ function logout() {
     localStorage.removeItem('userRole');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
+    // Redirect to index.html and ensure login section is shown
     window.location.href = '/index.html';
 }
