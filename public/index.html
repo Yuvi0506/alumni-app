@@ -8,23 +8,7 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <div class="header">
-        <div class="header-left">
-            <img src="logo.png" alt="LAA Logo" class="logo">
-            <div>
-                <h1>Loyola Alumni Network - USA</h1>
-                <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
-            </div>
-        </div>
-        <div class="header-right">
-            <div class="user-info" id="userInfo">
-                <span id="loggedInUser"></span>
-                <span class="user-icon">👤</span>
-                <a href="/profile.html" id="profileLink" class="hidden">Profile</a>
-                <button id="logoutButton" class="hidden" onclick="logout()">Logout</button>
-            </div>
-        </div>
-    </div>
+    <div id="header-placeholder"></div>
     <div class="container">
         <div id="loginSection" class="login-section">
             <div class="login-form">
@@ -32,9 +16,9 @@
                 <input type="password" id="password" placeholder="Password" required>
                 <div class="actions">
                     <button onclick="login()">Login</button>
-                    <button onclick="window.location.href='/signup.html'">Signup</button>
+                    <button onclick="window.location.href='/signup'">Signup</button>
                 </div>
-                <a href="/forgot-password.html">Forgot Password?</a>
+                <a href="/forgot-password">Forgot Password?</a>
                 <a href="#" onclick="resendVerificationEmail()">Resend Verification Email</a>
             </div>
         </div>
@@ -99,10 +83,9 @@
             </div>
         </div>
     </div>
-    <footer>
-        <p>©2025 Loyola Alumni Network - USA. All rights reserved.</p>
-    </footer>
+    <div id="footer-placeholder"></div>
 
+    <script src="/load-common.js"></script>
     <script>
         let userRole = null;
         let currentPage = 1;
@@ -286,26 +269,6 @@
             .catch(err => {
                 alert('Error resending verification email');
             });
-        }
-
-        // Logout
-        function logout() {
-            userRole = null;
-            userEmail = '';
-            userRecordId = null;
-            localStorage.removeItem('userRole');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userName');
-            document.getElementById('logoutButton').classList.add('hidden');
-            document.getElementById('profileLink').classList.add('hidden');
-            document.getElementById('loggedInUser').textContent = '';
-            document.getElementById('mainSection').classList.add('hidden');
-            document.getElementById('loginSection').classList.remove('hidden');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('searchInput').value = '';
-            searchTerm = '';
-            currentPage = 1;
         }
 
         // Check if user is already logged in
