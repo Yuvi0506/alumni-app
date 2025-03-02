@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Loyola Alumni Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="logo.png" alt="LAA Logo" class="logo">
+            <div>
+                <h1>Loyola Alumni Network - USA</h1>
+                <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <span id="loggedInUser"></span>
+                <span class="user-icon">👤</span>
+                <a href="/profile.html">Profile</a>
+                <button onclick="window.location.href='/index.html'">Back to Main</button>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="profile-section">
+            <h3>User Profile</h3>
+            <div id="userDetails"></div>
+            <h3>Your Alumni Record</h3>
+            <div id="alumniDetails"></div>
+        </div>
+    </div>
+    <footer>
+        <p>©2025 Loyola Alumni Network - USA. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const userRole = localStorage.getItem('userRole');
+        const userEmail = localStorage.getItem('userEmail');
+        const userName = localStorage.getItem('userName');
+
+        if (!userRole || !userEmail || !userName) {
+            window.location.href = '/index.html';
+        }
+
+        document.getElementById('loggedInUser').textContent = `Welcome, ${userName}`;
+
+        // Display user details
+        const userDetailsDiv = document.getElementById('userDetails');
+        userDetailsDiv.innerHTML = `
+            <p><strong>Name:</strong> ${userName}</p>
+            <p><strong>Email:</strong> ${userEmail}</p>
+            <p><strong>Role:</strong> ${userRole}</p>
+        `;
+
+        // Fetch and display alumni record
+        fetch(`/api/alumni?userEmail=${encodeURIComponent(userEmail)}&action=getUserRecord`)
+            .then(response => response.json())
+            .then(data => {
+                const alumniDetailsDiv = document.getElementById('alumniDetails');
+                if (data.success && data.userRecord) {
+                    const record = data.userRecord;
+                    alumniDetailsDiv.innerHTML = `
+                        <p><strong>Name:</strong> ${record.name}</p>
+                        <p><strong>Location:</strong> ${record.location}</p>
+                        <p><strong>Institute:</strong> ${record.institute}</p>
+                        <p><strong>Course:</strong> ${record.course}</p>
+                        <p><strong>Batch Year:</strong> ${record.batchYear}</p>
+                        <p><strong>Current Org:</strong> ${record.currentOrg}</p>
+                        <p><strong>Position:</strong> ${record.currentPosition}</p>
+                        <p><strong>Past Experience:</strong> ${record.pastExperience}</p>
+                        <p><strong>LinkedIn:</strong> <a href="${record.linkedin}" target="_blank">${record.linkedin}</a></p>
+                        <p><strong>Mobile:</strong> ${record.mobile}</p>
+                        <p><strong>Email:</strong> ${record.email}</p>
+                        <p><strong>Other Details:</strong> ${record.otherDetails}</p>
+                    `;
+                } else {
+                    alumniDetailsDiv.innerHTML = '<p>No alumni record found.</p>';
+                }
+            })
+            .catch(err => {
+                document.getElementById('alumniDetails').innerHTML = '<p>Error loading alumni record.</p>';
+            });
+
+        function logout() {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userName');
+            window.location.href = '/index.html';
+        }
+    </script>
+</body>
+</html>
