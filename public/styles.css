@@ -106,7 +106,7 @@ h3 {
 }
 
 .hidden {
-    display: none;
+    display: none !important; /* Ensure hidden elements are not visible */
 }
 
 input {
@@ -155,6 +155,7 @@ a:hover {
     justify-content: center;
     align-items: center;
     min-height: 80vh;
+    width: 100%;
 }
 
 .login-form, .signup-form, .verify-email, .forgot-password-form, .reset-password-form {
@@ -200,6 +201,7 @@ a:hover {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     flex: 1;
+    position: relative; /* Ensure container doesn't overlap with header/footer */
 }
 
 .search-form {
