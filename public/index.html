@@ -20,6 +20,7 @@
             <div class="user-info" id="userInfo">
                 <span id="loggedInUser"></span>
                 <span class="user-icon">👤</span>
+                <a href="/profile.html" id="profileLink" class="hidden">Profile</a>
                 <button id="logoutButton" class="hidden" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -33,6 +34,8 @@
                     <button onclick="login()">Login</button>
                     <button onclick="window.location.href='/signup.html'">Signup</button>
                 </div>
+                <a href="/forgot-password.html">Forgot Password?</a>
+                <a href="#" onclick="resendVerificationEmail()">Resend Verification Email</a>
             </div>
         </div>
         <div id="mainSection" class="hidden">
@@ -221,6 +224,7 @@
                     document.getElementById('loginSection').classList.add('hidden');
                     document.getElementById('mainSection').classList.remove('hidden');
                     document.getElementById('logoutButton').classList.remove('hidden');
+                    document.getElementById('profileLink').classList.remove('hidden');
                     document.getElementById('loggedInUser').textContent = `Welcome, ${data.name}`;
                     if (userRole === 'admin') {
                         document.getElementById('editForm').classList.remove('hidden');
@@ -258,6 +262,32 @@
             });
         }
 
+        // Resend verification email
+        function resendVerificationEmail() {
+            const email = document.getElementById('username').value;
+            if (!email) {
+                alert('Please enter your email');
+                return;
+            }
+
+            fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, action: 'resend-verification' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                alert('Error resending verification email');
+            });
+        }
+
         // Logout
         function logout() {
             userRole = null;
@@ -267,6 +297,7 @@
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userName');
             document.getElementById('logoutButton').classList.add('hidden');
+            document.getElementById('profileLink').classList.add('hidden');
             document.getElementById('loggedInUser').textContent = '';
             document.getElementById('mainSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
@@ -288,6 +319,7 @@
                 document.getElementById('loginSection').classList.add('hidden');
                 document.getElementById('mainSection').classList.remove('hidden');
                 document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('profileLink').classList.remove('hidden');
                 document.getElementById('loggedInUser').textContent = `Welcome, ${storedName}`;
                 if (userRole === 'admin') {
                     document.getElementById('editForm').classList.remove('hidden');
