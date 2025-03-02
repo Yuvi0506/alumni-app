@@ -246,7 +246,6 @@ a:hover {
     gap: 15px;
     justify-content: space-between;
     flex-wrap: wrap;
-    align-items: center;
 }
 
 .signup-form a, .verify-email a, .forgot-password-form a, .reset-password-form a {
