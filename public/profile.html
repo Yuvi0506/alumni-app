@@ -22,12 +22,15 @@
     <script src="/load-common.js"></script>
     <script>
         const userRole = localStorage.getItem('userRole');
-        const userEmail = localStorage.getItem('userEmail');
+        let userEmail = localStorage.getItem('userEmail');
         const userName = localStorage.getItem('userName');
 
         if (!userRole || !userEmail || !userName) {
             window.location.href = '/index.html';
         }
+
+        // Convert userEmail to lowercase
+        userEmail = userEmail.toLowerCase();
 
         // Display user details
         const userDetailsDiv = document.getElementById('userDetails');
