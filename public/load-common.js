@@ -5,8 +5,13 @@ fetch('/header.html')
         document.getElementById('header-placeholder').innerHTML = data;
 
         // Update logged-in user info after header is loaded
+        let storedEmail = localStorage.getItem('userEmail');
         const storedName = localStorage.getItem('userName');
-        if (storedName) {
+
+        // Convert stored email to lowercase
+        if (storedEmail) storedEmail = storedEmail.toLowerCase();
+
+        if (storedEmail && storedName) {
             document.getElementById('loggedInUser').textContent = `Welcome, ${storedName}`;
             document.getElementById('logoutButton').classList.remove('hidden');
             document.getElementById('profileLink').classList.remove('hidden');
