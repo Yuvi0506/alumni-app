@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify Email - Loyola Alumni Network</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="verify-email-page">
     <div id="header-placeholder"></div>
@@ -13,12 +13,12 @@
         <div class="verify-email">
             <p>Please check your email to verify your account.</p>
             <p>Didn't receive an email? <button onclick="resendVerification()">Resend Email</button></p>
-            <a href="/index.html">Back to Login</a>
+            <a href="/login.html">Back to Login</a>
         </div>
     </div>
     <div id="footer-placeholder"></div>
 
-    <script src="/load-common.js"></script>
+    <script src="/js/load-common.js"></script>
     <script>
         // Get email from URL query parameter
         const urlParams = new URLSearchParams(window.location.search);
@@ -39,7 +39,7 @@
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    window.location.href = '/index.html';
+                    window.location.href = '/login.html';
                 } else {
                     alert(data.message);
                 }
