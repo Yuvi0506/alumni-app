@@ -22,13 +22,16 @@
     <script>
         function signup() {
             const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
+            let email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
 
             if (!name || !email || !password) {
                 alert('Please fill in all fields');
                 return;
             }
+
+            // Convert email to lowercase
+            email = email.toLowerCase();
 
             fetch('/api/login', {
                 method: 'POST',
