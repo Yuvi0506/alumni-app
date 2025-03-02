@@ -28,6 +28,7 @@ const alumniSchema = new mongoose.Schema({
     pastExperience: { type: String, default: "None" },
     linkedin: { type: String, default: "Not provided" },
     mobile: { type: String, required: true },
+    email: { type: String, required: true }, // New Email field
     otherDetails: { type: String, default: "None" }
 });
 
@@ -45,7 +46,6 @@ module.exports = async (req, res) => {
         const skip = (page - 1) * limit;
 
         try {
-            // Create a search query to match any field (case-insensitive)
             const searchQuery = search ? {
                 $or: [
                     { name: { $regex: search, $options: 'i' } },
@@ -58,6 +58,7 @@ module.exports = async (req, res) => {
                     { pastExperience: { $regex: search, $options: 'i' } },
                     { linkedin: { $regex: search, $options: 'i' } },
                     { mobile: { $regex: search, $options: 'i' } },
+                    { email: { $regex: search, $options: 'i' } }, // Include Email in search
                     { otherDetails: { $regex: search, $options: 'i' } }
                 ]
             } : {};
@@ -73,14 +74,14 @@ module.exports = async (req, res) => {
             res.status(500).json({ success: false, message: "Server error" });
         }
     } else if (req.method === 'POST') {
-        const { name, location, institute, course, batchYear, currentOrg, currentPosition, pastExperience, linkedin, mobile, otherDetails, role } = req.body;
+        const { name, location, institute, course, batchYear, currentOrg, currentPosition, pastExperience, linkedin, mobile, email, otherDetails, role } = req.body;
         if (role !== 'admin') {
             return res.status(403).json({ success: false, message: "Admin access required" });
         }
-        if (name && location && institute && course && batchYear && currentOrg && currentPosition && mobile) {
+        if (name && location && institute && course && batchYear && currentOrg && currentPosition && mobile && email) {
             const newAlumni = new Alumni({
                 name, location, institute, course, batchYear,
-                currentOrg, currentPosition, pastExperience, linkedin, mobile, otherDetails
+                currentOrg, currentPosition, pastExperience, linkedin, mobile, email, otherDetails
             });
             await newAlumni.save();
             const alumni = await Alumni.find();
