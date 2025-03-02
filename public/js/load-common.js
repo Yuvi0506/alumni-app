@@ -13,36 +13,27 @@ const publicPaths = [
     '/html/reset-password.html'
 ];
 
-// Prevent flickering by showing a loading state
-document.documentElement.style.visibility = 'hidden'; // Hide content until checks are complete
+// Prevent redirect loop by checking if already redirecting
+let isRedirecting = false;
 
 // Immediate authentication check
 (function() {
-    // Check if we're already redirecting to avoid loops
-    if (sessionStorage.getItem('redirecting')) {
-        sessionStorage.removeItem('redirecting');
-        document.documentElement.style.visibility = 'visible';
+    if (isRedirecting) return;
+
+    // Skip authentication check for public paths
+    if (publicPaths.includes(window.location.pathname)) {
         return;
     }
 
+    // Check authentication
     const storedRole = localStorage.getItem('userRole');
     const storedEmail = localStorage.getItem('userEmail');
     const storedName = localStorage.getItem('userName');
-    const isAuthenticated = storedRole && storedEmail && storedName;
-
-    // Redirect logic
-    if (!isAuthenticated && !publicPaths.includes(window.location.pathname)) {
-        sessionStorage.setItem('redirecting', 'true');
-        window.location.href = '/login.html';
-        return;
-    } else if (isAuthenticated && (window.location.pathname === '/login.html' || window.location.pathname === '/')) {
-        sessionStorage.setItem('redirecting', 'true');
-        window.location.href = '/html/index.html';
+    if (!storedRole || !storedEmail || !storedName) {
+        isRedirecting = true;
+        window.location.replace('/login.html'); // Use replace to avoid history stack issues
         return;
     }
-
-    // If no redirect is needed, show the page
-    document.documentElement.style.visibility = 'visible';
 })();
 
 // Load header
@@ -56,11 +47,10 @@ fetch('/html/header.html')
         if (headerPlaceholder) {
             headerPlaceholder.innerHTML = data;
 
-            // Update logged-in user info after header is loaded
+            // Update logged-in user info
             let storedEmail = localStorage.getItem('userEmail');
             const storedName = localStorage.getItem('userName');
 
-            // Convert stored email to lowercase
             if (storedEmail) storedEmail = storedEmail.toLowerCase();
 
             if (storedEmail && storedName) {
@@ -79,11 +69,7 @@ fetch('/html/header.html')
             }
         }
     })
-    .catch(err => console.error('Error loading header:', err))
-    .finally(() => {
-        // Ensure the page is visible even if header fails to load
-        document.documentElement.style.visibility = 'visible';
-    });
+    .catch(err => console.error('Error loading header:', err));
 
 // Load footer
 fetch('/html/footer.html')
@@ -104,6 +90,5 @@ function logout() {
     localStorage.removeItem('userRole');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
-    sessionStorage.setItem('redirecting', 'true');
-    window.location.href = '/login.html';
+    window.location.replace('/login.html');
 }
