@@ -6,8 +6,8 @@
     { "src": "/forgot-password", "dest": "/html/forgot-password.html" },
     { "src": "/reset-password", "dest": "/html/reset-password.html" },
     { "src": "/profile", "dest": "/html/profile.html" },
-    { "src": "/html/index.html", "dest": "/api/auth?url=html/index.html" }, // Protect index.html
-    { "src": "/html/profile.html", "dest": "/api/auth?url=html/profile.html" }, // Protect profile.html
+    { "src": "/html/index.html", "dest": "/api/auth?url=html/index.html" }, 
+    { "src": "/html/profile.html", "dest": "/api/auth?url=html/profile.html" }, 
     { "src": "/html/header.html", "dest": "/html/header.html" },
     { "src": "/html/footer.html", "dest": "/html/footer.html" },
     { "src": "/css/(.*)", "dest": "/css/$1" },
