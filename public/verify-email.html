@@ -20,8 +20,11 @@
     <script>
         // Get email from URL query parameter
         const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get('email');
+        let email = urlParams.get('email');
         const token = urlParams.get('token');
+
+        // Convert email to lowercase
+        if (email) email = email.toLowerCase();
 
         if (token && email) {
             // Auto-verify if token is present in the URL
