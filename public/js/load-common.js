@@ -13,17 +13,36 @@ const publicPaths = [
     '/html/reset-password.html'
 ];
 
+// Prevent flickering by showing a loading state
+document.documentElement.style.visibility = 'hidden'; // Hide content until checks are complete
+
 // Immediate authentication check
 (function() {
-    if (!publicPaths.includes(window.location.pathname)) {
-        const storedRole = localStorage.getItem('userRole');
-        const storedEmail = localStorage.getItem('userEmail');
-        const storedName = localStorage.getItem('userName');
-        if (!storedRole || !storedEmail || !storedName) {
-            window.location.href = '/login.html'; // Redirect to login if not authenticated
-            return;
-        }
+    // Check if we're already redirecting to avoid loops
+    if (sessionStorage.getItem('redirecting')) {
+        sessionStorage.removeItem('redirecting');
+        document.documentElement.style.visibility = 'visible';
+        return;
     }
+
+    const storedRole = localStorage.getItem('userRole');
+    const storedEmail = localStorage.getItem('userEmail');
+    const storedName = localStorage.getItem('userName');
+    const isAuthenticated = storedRole && storedEmail && storedName;
+
+    // Redirect logic
+    if (!isAuthenticated && !publicPaths.includes(window.location.pathname)) {
+        sessionStorage.setItem('redirecting', 'true');
+        window.location.href = '/login.html';
+        return;
+    } else if (isAuthenticated && (window.location.pathname === '/login.html' || window.location.pathname === '/')) {
+        sessionStorage.setItem('redirecting', 'true');
+        window.location.href = '/html/index.html';
+        return;
+    }
+
+    // If no redirect is needed, show the page
+    document.documentElement.style.visibility = 'visible';
 })();
 
 // Load header
@@ -60,7 +79,11 @@ fetch('/html/header.html')
             }
         }
     })
-    .catch(err => console.error('Error loading header:', err));
+    .catch(err => console.error('Error loading header:', err))
+    .finally(() => {
+        // Ensure the page is visible even if header fails to load
+        document.documentElement.style.visibility = 'visible';
+    });
 
 // Load footer
 fetch('/html/footer.html')
@@ -81,6 +104,6 @@ function logout() {
     localStorage.removeItem('userRole');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
-    // Redirect to login.html
+    sessionStorage.setItem('redirecting', 'true');
     window.location.href = '/login.html';
 }

@@ -1,19 +1,17 @@
 module.exports = async (req, res) => {
-    // Simulate authentication check (in a real app, you'd use a secure session/token)
-    const { url } = req;
+    // Get the requested URL
+    const { url } = req.query;
 
-    // Check if the user is authenticated (simulated by checking localStorage via a query param for demo purposes)
-    // In a real app, you'd use a secure mechanism like JWT tokens or cookies
-    const isAuthenticated = req.headers['x-authenticated'] === 'true'; // Simulated header
+    // Check if the user is authenticated (simulated by checking localStorage via a header)
+    const isAuthenticated = req.headers['x-authenticated'] === 'true';
 
     if (!isAuthenticated) {
-        // Redirect to login.html if not authenticated
         res.writeHead(302, { Location: '/login.html' });
         res.end();
         return;
     }
 
-    // Serve the requested page if authenticated
+    // If authenticated, serve the requested static page
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(`
         <!DOCTYPE html>
@@ -25,8 +23,7 @@ module.exports = async (req, res) => {
         </head>
         <body>
             <script>
-                // Redirect to the requested page
-                window.location.href = '/${url}';
+                window.location.replace('/${url}');
             </script>
         </body>
         </html>
