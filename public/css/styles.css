@@ -186,29 +186,31 @@ a:hover {
     color: #f5c518;
 }
 
+/* Updated styles to ensure full-page rendering */
 .container {
     max-width: 1200px;
-    margin: 20px auto;
+    margin: 0 auto;
     padding: 20px;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     flex: 1;
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 200px);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .login-page, .signup-page, .verify-email-page, .forgot-password-page, .reset-password-page {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between; /* Ensure content stretches to fill the space */
     align-items: center;
     width: 100%;
-    min-height: calc(100vh - 200px);
+    min-height: 100vh; /* Full viewport height */
+    box-sizing: border-box;
 }
 
 .login-form, .signup-form, .verify-email, .forgot-password-form, .reset-password-form {
@@ -223,6 +225,7 @@ a:hover {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     border: 1px solid #e0e0e0;
     transition: transform 0.2s;
+    margin: auto; /* Center the form vertically and horizontally */
 }
 
 .login-form:hover, .signup-form:hover, .verify-email:hover, .forgot-password-form:hover, .reset-password-form:hover {
@@ -499,7 +502,6 @@ tr:hover {
     .container {
         margin: 10px;
         padding: 15px;
-        min-height: calc(100vh - 250px);
     }
 
     .login-form, .signup-form, .verify-email, .forgot-password-form, .reset-password-form {
