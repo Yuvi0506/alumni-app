@@ -189,8 +189,12 @@
 
         // Login
         function login() {
-            const email = document.getElementById('username').value;
+            let email = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+
+            // Convert email to lowercase
+            email = email.toLowerCase();
+
             fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -247,11 +251,14 @@
 
         // Resend verification email
         function resendVerificationEmail() {
-            const email = document.getElementById('username').value;
+            let email = document.getElementById('username').value;
             if (!email) {
                 alert('Please enter your email');
                 return;
             }
+
+            // Convert email to lowercase
+            email = email.toLowerCase();
 
             fetch('/api/login', {
                 method: 'POST',
@@ -274,9 +281,12 @@
         // Check if user is already logged in
         window.onload = function() {
             const storedRole = localStorage.getItem('userRole');
-            const storedEmail = localStorage.getItem('userEmail');
+            let storedEmail = localStorage.getItem('userEmail');
             const storedName = localStorage.getItem('userName');
             if (storedRole && storedEmail && storedName) {
+                // Convert stored email to lowercase
+                storedEmail = storedEmail.toLowerCase();
+
                 userRole = storedRole;
                 userEmail = storedEmail;
                 document.getElementById('loginSection').classList.add('hidden');
@@ -342,6 +352,10 @@
 
         // Add new alumni (admin only)
         function addAlumni() {
+            let email = document.getElementById('email').value;
+            // Convert email to lowercase
+            email = email.toLowerCase();
+
             const alumni = {
                 name: document.getElementById('name').value,
                 location: document.getElementById('location').value,
@@ -353,7 +367,7 @@
                 pastExperience: document.getElementById('pastExperience').value,
                 linkedin: document.getElementById('linkedin').value,
                 mobile: document.getElementById('mobile').value,
-                email: document.getElementById('email').value,
+                email: email,
                 otherDetails: document.getElementById('otherDetails').value,
                 role: userRole
             };
@@ -403,6 +417,10 @@
 
         // Update alumni
         function updateAlumni(id) {
+            let email = document.getElementById('email').value;
+            // Convert email to lowercase
+            email = email.toLowerCase();
+
             const alumni = {
                 name: document.getElementById('name').value,
                 location: document.getElementById('location').value,
@@ -414,7 +432,7 @@
                 pastExperience: document.getElementById('pastExperience').value,
                 linkedin: document.getElementById('linkedin').value,
                 mobile: document.getElementById('mobile').value,
-                email: document.getElementById('email').value,
+                email: email,
                 otherDetails: document.getElementById('otherDetails').value,
                 role: userRole
             };
