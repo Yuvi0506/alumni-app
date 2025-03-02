@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const nodemailer = require('nodemailer');
-//const bcrypt = require('bcryptjs');
+const sgMail = require('@sendgrid/mail');
+const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 // Load environment variables locally
@@ -34,23 +34,8 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// Nodemailer setup
-const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
-
-// Verify email transport configuration
-transporter.verify((error, success) => {
-    if (error) {
-        console.error('Email transport verification failed:', error);
-    } else {
-        console.log('Email transport is ready to send messages');
-    }
-});
+// SendGrid setup
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = async (req, res) => {
     if (!process.env.MONGO_URI) {
@@ -59,10 +44,12 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === 'POST') {
-        const { email, password, name, action, token, newPassword } = req.body;
+        let { email, password, name, action, token, newPassword } = req.body;
+
+        // Convert email to lowercase for case-insensitive handling
+        if (email) email = email.toLowerCase();
 
         if (action === 'signup') {
-            // Handle user signup
             try {
                 const existingUser = await User.findOne({ email });
                 if (existingUser) {
@@ -74,7 +61,7 @@ module.exports = async (req, res) => {
                 const hashedPassword = await bcrypt.hash(password, 10);
 
                 const newUser = new User({
-                    email,
+                    email, // Already converted to lowercase
                     name,
                     password: hashedPassword,
                     verificationToken
@@ -85,9 +72,9 @@ module.exports = async (req, res) => {
                 // Attempt to send verification email
                 let emailSent = false;
                 const verificationLink = `${req.headers.origin}/verify-email?token=${verificationToken}&email=${email}`;
-                const mailOptions = {
-                    from: process.env.EMAIL_USER,
+                const msg = {
                     to: email,
+                    from: 'noreply@yourdomain.com', // Replace with your verified sender email in SendGrid
                     subject: 'Verify Your Email - Loyola Alumni Network',
                     html: `
                         <h3>Welcome to Loyola Alumni Network, ${name}!</h3>
@@ -98,7 +85,7 @@ module.exports = async (req, res) => {
                 };
 
                 try {
-                    await transporter.sendMail(mailOptions);
+                    await sgMail.send(msg);
                     console.log(`Verification email sent to ${email}`);
                     emailSent = true;
                 } catch (emailErr) {
@@ -150,9 +137,9 @@ module.exports = async (req, res) => {
                 console.log(`Reset token generated for ${email}`);
 
                 const resetLink = `${req.headers.origin}/reset-password?token=${resetToken}&email=${email}`;
-                const mailOptions = {
-                    from: process.env.EMAIL_USER,
+                const msg = {
                     to: email,
+                    from: 'noreply@yourdomain.com', // Replace with your verified sender email in SendGrid
                     subject: 'Reset Your Password - Loyola Alumni Network',
                     html: `
                         <h3>Password Reset Request</h3>
@@ -163,7 +150,7 @@ module.exports = async (req, res) => {
                 };
 
                 try {
-                    await transporter.sendMail(mailOptions);
+                    await sgMail.send(msg);
                     console.log(`Password reset email sent to ${email}`);
                     res.status(200).json({ success: true, message: "Password reset link sent to your email." });
                 } catch (emailErr) {
@@ -219,9 +206,9 @@ module.exports = async (req, res) => {
                 console.log(`New verification token generated for ${email}`);
 
                 const verificationLink = `${req.headers.origin}/verify-email?token=${verificationToken}&email=${email}`;
-                const mailOptions = {
-                    from: process.env.EMAIL_USER,
+                const msg = {
                     to: email,
+                    from: 'noreply@yourdomain.com', // Replace with your verified sender email in SendGrid
                     subject: 'Verify Your Email - Loyola Alumni Network',
                     html: `
                         <h3>Welcome to Loyola Alumni Network, ${user.name}!</h3>
@@ -232,7 +219,7 @@ module.exports = async (req, res) => {
                 };
 
                 try {
-                    await transporter.sendMail(mailOptions);
+                    await sgMail.send(msg);
                     console.log(`Verification email resent to ${email}`);
                     res.status(200).json({ success: true, message: "Verification email resent. Please check your inbox." });
                 } catch (emailErr) {
@@ -247,7 +234,6 @@ module.exports = async (req, res) => {
                 res.status(500).json({ success: false, message: "Server error during resend verification" });
             }
         } else {
-            // Handle login
             try {
                 const user = await User.findOne({ email });
                 if (!user) {
