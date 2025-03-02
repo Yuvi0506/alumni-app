@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile - Loyola Alumni Network</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -19,15 +19,11 @@
     </div>
     <div id="footer-placeholder"></div>
 
-    <script src="/load-common.js"></script>
+    <script src="/js/load-common.js"></script>
     <script>
         const userRole = localStorage.getItem('userRole');
         let userEmail = localStorage.getItem('userEmail');
         const userName = localStorage.getItem('userName');
-
-        if (!userRole || !userEmail || !userName) {
-            window.location.href = '/index.html';
-        }
 
         // Convert userEmail to lowercase
         userEmail = userEmail.toLowerCase();
