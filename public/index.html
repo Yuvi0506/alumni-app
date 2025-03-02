@@ -95,6 +95,22 @@
         let userEmail = '';
         let userRecordId = null;
 
+        // Utility function to show login section and hide main section
+        function showLoginSection() {
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('logoutButton').classList.add('hidden');
+            document.getElementById('profileLink').classList.add('hidden');
+        }
+
+        // Utility function to show main section and hide login section
+        function showMainSection() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('mainSection').classList.remove('hidden');
+            document.getElementById('logoutButton').classList.remove('hidden');
+            document.getElementById('profileLink').classList.remove('hidden');
+        }
+
         // Display alumni list in table
         function displayAlumni(data, totalPages) {
             const list = document.getElementById('alumniList');
@@ -208,11 +224,11 @@
                     localStorage.setItem('userRole', userRole);
                     localStorage.setItem('userEmail', userEmail);
                     localStorage.setItem('userName', data.name);
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('mainSection').classList.remove('hidden');
-                    document.getElementById('logoutButton').classList.remove('hidden');
-                    document.getElementById('profileLink').classList.remove('hidden');
+
+                    // Update UI: show main section, hide login section
+                    showMainSection();
                     document.getElementById('loggedInUser').textContent = `Welcome, ${data.name}`;
+
                     if (userRole === 'admin') {
                         document.getElementById('editForm').classList.remove('hidden');
                     } else if (userRole === 'user') {
@@ -246,6 +262,10 @@
                 } else {
                     alert(data.message);
                 }
+            })
+            .catch(err => {
+                console.error('Login fetch error:', err);
+                alert('Error during login: ' + err.message);
             });
         }
 
@@ -289,10 +309,7 @@
 
                 userRole = storedRole;
                 userEmail = storedEmail;
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('mainSection').classList.remove('hidden');
-                document.getElementById('logoutButton').classList.remove('hidden');
-                document.getElementById('profileLink').classList.remove('hidden');
+                showMainSection();
                 document.getElementById('loggedInUser').textContent = `Welcome, ${storedName}`;
                 if (userRole === 'admin') {
                     document.getElementById('editForm').classList.remove('hidden');
@@ -323,6 +340,8 @@
                         });
                 }
                 fetchAlumni();
+            } else {
+                showLoginSection();
             }
         };
 
