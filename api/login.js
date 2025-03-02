@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcryptjs');
+//const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 // Load environment variables locally
