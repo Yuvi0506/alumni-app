@@ -5,21 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup - Loyola Alumni Network</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="signup-page">
     <div id="header-placeholder"></div>
-    <div class="signup-form">
-        <input type="text" id="signupName" placeholder="Name" required>
-        <input type="email" id="signupEmail" placeholder="Email (Username)" required>
-        <input type="password" id="signupPassword" placeholder="Password" required>
-        <button onclick="signup()">Signup</button>
-        <a href="/index.html">Already have an account? Login</a>
+    <div class="container">
+        <div class="signup-form">
+            <input type="text" id="signupName" placeholder="Name" required>
+            <input type="email" id="signupEmail" placeholder="Email (Username)" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <button onclick="signup()">Signup</button>
+            <a href="/login.html">Already have an account? Login</a>
+        </div>
     </div>
     <div id="footer-placeholder"></div>
 
-    <script src="/load-common.js"></script>
+    <script src="/js/load-common.js"></script>
     <script>
+        // Redirect to index.html if already logged in
+        window.onload = function() {
+            const storedRole = localStorage.getItem('userRole');
+            const storedEmail = localStorage.getItem('userEmail');
+            const storedName = localStorage.getItem('userName');
+            if (storedRole && storedEmail && storedName) {
+                window.location.href = '/html/index.html';
+            }
+        };
+
         function signup() {
             const name = document.getElementById('signupName').value;
             let email = document.getElementById('signupEmail').value;
@@ -42,7 +54,7 @@
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    window.location.href = `/verify-email?email=${encodeURIComponent(email)}`;
+                    window.location.href = `/html/verify-email.html?email=${encodeURIComponent(email)}`;
                 } else {
                     alert(data.message);
                 }
