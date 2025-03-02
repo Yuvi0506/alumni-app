@@ -8,15 +8,7 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body class="signup-page">
-    <div class="header">
-        <div class="header-left">
-            <img src="logo.png" alt="LAA Logo" class="logo">
-            <div>
-                <h1>Loyola Alumni Network - USA</h1>
-                <p>Loyola College, Chennai - College of Excellence<br>Let Your Light Shine</p>
-            </div>
-        </div>
-    </div>
+    <div id="header-placeholder"></div>
     <div class="signup-form">
         <input type="text" id="signupName" placeholder="Name" required>
         <input type="email" id="signupEmail" placeholder="Email (Username)" required>
@@ -24,10 +16,9 @@
         <button onclick="signup()">Signup</button>
         <a href="/index.html">Already have an account? Login</a>
     </div>
-    <footer>
-        <p>©2025 Loyola Alumni Network - USA. All rights reserved.</p>
-    </footer>
+    <div id="footer-placeholder"></div>
 
+    <script src="/load-common.js"></script>
     <script>
         function signup() {
             const name = document.getElementById('signupName').value;
@@ -48,8 +39,7 @@
             .then(data => {
                 if (data.success) {
                     alert(data.message);
-                    // Redirect to a verification page or prompt user to check email
-                    window.location.href = `/verify-email.html?email=${encodeURIComponent(email)}`;
+                    window.location.href = `/verify-email?email=${encodeURIComponent(email)}`;
                 } else {
                     alert(data.message);
                 }
