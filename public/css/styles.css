@@ -18,9 +18,14 @@ body {
     align-items: center;
     justify-content: space-between;
     border-bottom: 3px solid #f5c518;
-    width: 100%;
+    width: 100vw; /* Use viewport width to ensure full width */
     box-sizing: border-box;
     flex-wrap: wrap;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
 }
 
 .header-left {
@@ -112,9 +117,14 @@ footer {
     border-top: 3px solid #f5c518;
     font-size: 0.9em;
     font-weight: 400;
-    width: 100%;
+    width: 100vw; /* Use viewport width to ensure full width */
     box-sizing: border-box;
     margin-top: auto;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
 }
 
 footer p {
@@ -186,7 +196,6 @@ a:hover {
     color: #f5c518;
 }
 
-/* Updated styles to ensure full-page rendering */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -206,10 +215,10 @@ a:hover {
 .login-page, .signup-page, .verify-email-page, .forgot-password-page, .reset-password-page {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Ensure content stretches to fill the space */
+    justify-content: space-between;
     align-items: center;
     width: 100%;
-    min-height: 100vh; /* Full viewport height */
+    min-height: 100vh;
     box-sizing: border-box;
 }
 
@@ -225,7 +234,7 @@ a:hover {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     border: 1px solid #e0e0e0;
     transition: transform 0.2s;
-    margin: auto; /* Center the form vertically and horizontally */
+    margin: auto;
 }
 
 .login-form:hover, .signup-form:hover, .verify-email:hover, .forgot-password-form:hover, .reset-password-form:hover {
