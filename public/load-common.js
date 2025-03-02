@@ -1,29 +1,41 @@
 // Load header
 fetch('/header.html')
-    .then(response => response.text())
+    .then(response => {
+        if (!response.ok) throw new Error('Failed to load header');
+        return response.text();
+    })
     .then(data => {
-        document.getElementById('header-placeholder').innerHTML = data;
+        const headerPlaceholder = document.getElementById('header-placeholder');
+        if (headerPlaceholder) {
+            headerPlaceholder.innerHTML = data;
 
-        // Update logged-in user info after header is loaded
-        let storedEmail = localStorage.getItem('userEmail');
-        const storedName = localStorage.getItem('userName');
+            // Update logged-in user info after header is loaded
+            let storedEmail = localStorage.getItem('userEmail');
+            const storedName = localStorage.getItem('userName');
 
-        // Convert stored email to lowercase
-        if (storedEmail) storedEmail = storedEmail.toLowerCase();
+            // Convert stored email to lowercase
+            if (storedEmail) storedEmail = storedEmail.toLowerCase();
 
-        if (storedEmail && storedName) {
-            document.getElementById('loggedInUser').textContent = `Welcome, ${storedName}`;
-            document.getElementById('logoutButton').classList.remove('hidden');
-            document.getElementById('profileLink').classList.remove('hidden');
+            if (storedEmail && storedName) {
+                document.getElementById('loggedInUser').textContent = `Welcome, ${storedName}`;
+                document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('profileLink').classList.remove('hidden');
+            }
         }
     })
     .catch(err => console.error('Error loading header:', err));
 
 // Load footer
 fetch('/footer.html')
-    .then(response => response.text())
+    .then(response => {
+        if (!response.ok) throw new Error('Failed to load footer');
+        return response.text();
+    })
     .then(data => {
-        document.getElementById('footer-placeholder').innerHTML = data;
+        const footerPlaceholder = document.getElementById('footer-placeholder');
+        if (footerPlaceholder) {
+            footerPlaceholder.innerHTML = data;
+        }
     })
     .catch(err => console.error('Error loading footer:', err));
 
