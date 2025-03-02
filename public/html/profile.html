@@ -37,11 +37,7 @@
         `;
 
         // Fetch and display alumni record
-        fetch(`/api/alumni?userEmail=${encodeURIComponent(userEmail)}&action=getUserRecord`, {
-            headers: {
-                'x-authenticated': localStorage.getItem('userRole') ? 'true' : 'false'
-            }
-        })
+        fetch(`/api/alumni?userEmail=${encodeURIComponent(userEmail)}&action=getUserRecord`)
             .then(response => response.json())
             .then(data => {
                 const alumniDetailsDiv = document.getElementById('alumniDetails');
