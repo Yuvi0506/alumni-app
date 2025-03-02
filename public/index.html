@@ -84,11 +84,14 @@
             color: #fff;
             text-align: center;
             margin-bottom: 20px;
-            font-size: 1.0em; /* Smaller font size */
-            background: #003087; /* Match table header background */
+            font-size: 1.0em;
+            background: #003087;
             padding: 10px;
             border-radius: 5px;
             font-weight: 300;
+            margin-left: auto;
+            margin-right: auto;
+            width: fit-content;
         }
         .hidden {
             display: none;
@@ -265,7 +268,7 @@
             color: white;
         }
         .edit-form-container {
-            max-width: 800px; /* Reverted to smaller width */
+            max-width: 800px;
             margin: 0 auto 20px;
         }
         .edit-form {
@@ -296,6 +299,7 @@
         .edit-form .submit-btn button {
             padding: 12px 30px;
             font-size: 1em;
+            width: fit-content;
         }
         footer {
             background: #003087;
@@ -395,15 +399,9 @@
                             <input type="text" id="otherDetails" placeholder="Other Details">
                         </div>
                     </div>
-                    <br/>
-                    <br/>
-                    <center>
                     <div class="submit-btn">
-                        
                         <button onclick="addAlumni()">Add New Alumni</button>
-                      
                     </div>
-                          </center>
                 </div>
             </div>
         </div>
