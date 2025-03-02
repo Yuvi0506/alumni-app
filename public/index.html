@@ -81,10 +81,13 @@
             flex: 1;
         }
         h2 {
-            color: #0a2351; /* Reverted to previous color */
+            color: #fff;
             text-align: center;
             margin-bottom: 20px;
-            font-size: 1.5em;
+            font-size: 1.2em; /* Smaller font size */
+            background: #003087; /* Match table header background */
+            padding: 10px;
+            border-radius: 5px;
             font-weight: 500;
         }
         .hidden {
@@ -157,8 +160,8 @@
         }
         button.details-btn {
             background: #17a2b8;
-            padding: 4px 8px; /* Smaller padding for smaller button */
-            font-size: 0.8em; /* Smaller font size */
+            padding: 4px 8px;
+            font-size: 0.8em;
         }
         button.details-btn:hover {
             background: #138496;
@@ -262,7 +265,7 @@
             color: white;
         }
         .edit-form-container {
-            max-width: 1100px;
+            max-width: 800px; /* Reverted to smaller width */
             margin: 0 auto 20px;
         }
         .edit-form {
@@ -371,8 +374,6 @@
                 </table>
             </div>
             <div class="pagination" id="pagination"></div>
-            <br/>
-            <br/>
             <div id="editForm" class="hidden">
                 <div class="edit-form-container">
                     <h2>Add Alumni</h2>
