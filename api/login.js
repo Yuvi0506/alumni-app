@@ -61,6 +61,8 @@ function comparePassword(password, hashedPassword) {
 }
 
 module.exports = async (req, res) => {
+    console.log('Request received at /api/login:', req.method, req.body);
+
     if (!process.env.MONGO_URI) {
         console.error('MONGO_URI not set');
         return res.status(500).json({ success: false, message: "MONGO_URI not set" });
@@ -76,6 +78,7 @@ module.exports = async (req, res) => {
 
         // Convert email to lowercase for case-insensitive handling
         if (email) email = email.toLowerCase();
+        console.log('Processed email (lowercase):', email);
 
         if (action === 'signup') {
             try {
@@ -95,7 +98,7 @@ module.exports = async (req, res) => {
                     verificationToken
                 });
                 await newUser.save();
-                console.log(`User ${email} successfully added to database`);
+                console.log(`User ${email} successfully added to database, verificationToken: ${verificationToken}`);
 
                 // Attempt to send verification email using nodemailer
                 let emailSent = false;
@@ -112,7 +115,7 @@ module.exports = async (req, res) => {
                     `
                 };
 
-                console.log(`Attempting to send verification email to ${email}...`);
+                console.log(`Attempting to send verification email to ${email} with link: ${verificationLink}`);
                 try {
                     const info = await transporter.sendMail(mailOptions);
                     console.log(`Verification email sent to ${email}:`, info.response);
@@ -144,13 +147,13 @@ module.exports = async (req, res) => {
                     return res.status(400).json({ success: false, message: "Invalid verification token or email" });
                 }
 
-                console.log(`User found for verification: ${email}`);
+                console.log(`User found for verification: ${email}, isVerified: ${user.isVerified}`);
 
                 // Update user verification status
                 user.isVerified = true;
                 user.verificationToken = undefined;
                 await user.save();
-                console.log(`Email ${email} verified successfully`);
+                console.log(`Email ${email} verified successfully, updated isVerified: ${user.isVerified}`);
 
                 res.status(200).json({ success: true, message: "Email verified successfully" });
             } catch (err) {
@@ -236,7 +239,7 @@ module.exports = async (req, res) => {
                 const verificationToken = crypto.randomBytes(32).toString('hex');
                 user.verificationToken = verificationToken;
                 await user.save();
-                console.log(`New verification token generated for ${email}`);
+                console.log(`New verification token generated for ${email}: ${verificationToken}`);
 
                 const verificationLink = `${req.headers.origin}/html/verify-email.html?token=${verificationToken}&email=${email}`;
                 const mailOptions = {
@@ -251,7 +254,7 @@ module.exports = async (req, res) => {
                     `
                 };
 
-                console.log(`Attempting to resend verification email to ${email}...`);
+                console.log(`Attempting to resend verification email to ${email} with link: ${verificationLink}`);
                 try {
                     const info = await transporter.sendMail(mailOptions);
                     console.log(`Verification email resent to ${email}:`, info.response);
@@ -299,5 +302,8 @@ module.exports = async (req, res) => {
                 res.status(500).json({ success: false, message: "Server error during login" });
             }
         }
+    } else {
+        console.log('Invalid request method:', req.method);
+        res.status(405).json({ success: false, message: "Method not allowed" });
     }
 };
