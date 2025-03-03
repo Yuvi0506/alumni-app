@@ -20,16 +20,22 @@
 
     <script src="/js/load-common.js"></script>
     <script>
-        // Get email from URL query parameter
+        // Get email and token from URL query parameters
         const urlParams = new URLSearchParams(window.location.search);
         let email = urlParams.get('email');
         const token = urlParams.get('token');
+
+        // Log the extracted parameters
+        console.log('Verify-email page loaded, extracted parameters:');
+        console.log('Email:', email);
+        console.log('Token:', token);
 
         // Convert email to lowercase
         if (email) email = email.toLowerCase();
 
         if (token && email) {
-            // Auto-verify if token is present in the URL
+            console.log(`Attempting to verify email: ${email} with token: ${token}`);
+            // Auto-verify if token and email are present in the URL
             fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -37,6 +43,7 @@
             })
             .then(response => response.json())
             .then(data => {
+                console.log('Verification response:', data);
                 if (data.success) {
                     alert(data.message);
                     window.location.href = '/login.html';
@@ -45,8 +52,11 @@
                 }
             })
             .catch(err => {
+                console.error('Error during verification:', err);
                 alert('Error during verification');
             });
+        } else {
+            console.log('Missing token or email in URL parameters');
         }
 
         function resendVerification() {
