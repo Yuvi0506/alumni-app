@@ -232,7 +232,7 @@ module.exports = async (req, res) => {
                 await user.save();
                 console.log(`New verification token generated for ${email}`);
 
-                const verificationLink = `${req.headers.origin}/verify-email?token=${verificationToken}&email=${email}`;
+                const verificationLink = `${req.headers.origin}/html/verify-email?token=${verificationToken}&email=${email}`;
                 const mailOptions = {
                     from: process.env.EMAIL_USER,
                     to: email,
