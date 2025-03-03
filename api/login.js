@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 // Load environment variables locally
@@ -52,17 +51,25 @@ transporter.verify((error, success) => {
     }
 });
 
+// Hash password using crypto (temporary)
+const hashPassword = (password) => {
+    return crypto.createHash('sha256').update(password).digest('hex');
+};
+
+// Compare password (temporary)
+const comparePassword = (password, hashedPassword) => {
+    return hashPassword(password) === hashedPassword;
+};
+
 module.exports = async (req, res) => {
     if (!process.env.MONGO_URI) {
         console.error('MONGO_URI not set');
         return res.status(500).json({ success: false, message: "MONGO_URI not set" });
-    }
-
+    } 
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
         console.error('Email credentials missing: EMAIL_USER or EMAIL_PASS not set');
         return res.status(500).json({ success: false, message: "Email credentials missing" });
     }
-
     if (req.method === 'POST') {
         let { email, password, name, action, token, newPassword } = req.body;
 
@@ -78,10 +85,10 @@ module.exports = async (req, res) => {
                 }
 
                 const verificationToken = crypto.randomBytes(32).toString('hex');
-                const hashedPassword = await bcrypt.hash(password, 10);
+                const hashedPassword = hashPassword(password);
 
                 const newUser = new User({
-                    email,
+                    email, // Already converted to lowercase
                     name,
                     password: hashedPassword,
                     verificationToken
@@ -91,7 +98,7 @@ module.exports = async (req, res) => {
 
                 // Attempt to send verification email
                 let emailSent = false;
-                const verificationLink = `${req.headers.origin}/html/verify-email.html?token=${verificationToken}&email=${encodeURIComponent(email)}`;
+               const verificationLink = `${req.headers.origin}/html/verify-email.html?token=${verificationToken}&email=${encodeURIComponent(email)}`;
                 const mailOptions = {
                     from: process.env.EMAIL_USER,
                     to: email,
@@ -126,18 +133,12 @@ module.exports = async (req, res) => {
             }
         } else if (action === 'verify') {
             try {
-                console.log(`Verification request received for email: ${email}, token: ${token}`);
-
-                // Find user by email and verification token
                 const user = await User.findOne({ email, verificationToken: token });
                 if (!user) {
-                    console.log(`Verification failed: Invalid token or email - email: ${email}, token: ${token}`);
-                    return res.status(400).json({ success: false, message: "Invalid verification token or email" });
+                    console.log(`Verification failed: Invalid token for email ${email}`);
+                    return res.status(400).json({ success: false, message: "Invalid verification token" });
                 }
 
-                console.log(`User found for verification: ${email}`);
-
-                // Update user verification status
                 user.isVerified = true;
                 user.verificationToken = undefined;
                 await user.save();
@@ -160,9 +161,9 @@ module.exports = async (req, res) => {
                 user.resetToken = resetToken;
                 user.resetTokenExpiry = Date.now() + 3600000; // 1 hour expiry
                 await user.save();
-                console.log(`Reset token generated for ${email}: ${resetToken}`);
+                console.log(`Reset token generated for ${email}`);
 
-                const resetLink = `${req.headers.origin}/html/reset-password.html?token=${resetToken}&email=${email}`;
+                const resetLink = `${req.headers.origin}/reset-password?token=${resetToken}&email=${email}`;
                 const mailOptions = {
                     from: process.env.EMAIL_USER,
                     to: email,
@@ -175,14 +176,16 @@ module.exports = async (req, res) => {
                     `
                 };
 
-                console.log(`Attempting to send password reset email to ${email}...`);
                 try {
-                    const info = await transporter.sendMail(mailOptions);
-                    console.log(`Password reset email sent to ${email}:`, info.response);
+                    await transporter.sendMail(mailOptions);
+                    console.log(`Password reset email sent to ${email}`);
                     res.status(200).json({ success: true, message: "Password reset link sent to your email." });
                 } catch (emailErr) {
                     console.error(`Failed to send password reset email to ${email}:`, emailErr);
-                    res.status(500).json({ success: false, message: `Failed to send password reset email: ${emailErr.message}` });
+                    res.status(200).json({
+                        success: true,
+                        message: "Password reset link generated, but failed to send email. Please try again or contact support."
+                    });
                 }
             } catch (err) {
                 console.error('Forgot password error:', err);
@@ -200,7 +203,7 @@ module.exports = async (req, res) => {
                     return res.status(400).json({ success: false, message: "Invalid or expired reset token" });
                 }
 
-                const hashedPassword = await bcrypt.hash(newPassword, 10);
+                const hashedPassword = hashPassword(newPassword);
                 user.password = hashedPassword;
                 user.resetToken = undefined;
                 user.resetTokenExpiry = undefined;
@@ -229,7 +232,7 @@ module.exports = async (req, res) => {
                 await user.save();
                 console.log(`New verification token generated for ${email}`);
 
-                const verificationLink = `${req.headers.origin}/html/verify-email.html?token=${verificationToken}&email=${email}`;
+                const verificationLink = `${req.headers.origin}/verify-email?token=${verificationToken}&email=${email}`;
                 const mailOptions = {
                     from: process.env.EMAIL_USER,
                     to: email,
@@ -242,14 +245,16 @@ module.exports = async (req, res) => {
                     `
                 };
 
-                console.log(`Attempting to resend verification email to ${email}...`);
                 try {
-                    const info = await transporter.sendMail(mailOptions);
-                    console.log(`Verification email resent to ${email}:`, info.response);
+                    await transporter.sendMail(mailOptions);
+                    console.log(`Verification email resent to ${email}`);
                     res.status(200).json({ success: true, message: "Verification email resent. Please check your inbox." });
                 } catch (emailErr) {
                     console.error(`Failed to resend verification email to ${email}:`, emailErr);
-                    res.status(500).json({ success: false, message: `Failed to resend verification email: ${emailErr.message}` });
+                    res.status(200).json({
+                        success: true,
+                        message: "Verification email prepared, but failed to send. Please try again or contact support."
+                    });
                 }
             } catch (err) {
                 console.error('Resend verification error:', err);
@@ -268,7 +273,7 @@ module.exports = async (req, res) => {
                     return res.status(403).json({ success: false, message: "Please verify your email before logging in" });
                 }
 
-                const isPasswordValid = await bcrypt.compare(password, user.password);
+                const isPasswordValid = comparePassword(password, user.password);
                 if (!isPasswordValid) {
                     console.log(`Login failed: Incorrect password for email ${email}`);
                     return res.status(401).json({ success: false, message: "Invalid credentials" });
