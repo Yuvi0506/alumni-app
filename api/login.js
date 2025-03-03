@@ -61,7 +61,12 @@ function comparePassword(password, hashedPassword) {
 }
 
 module.exports = async (req, res) => {
-    console.log('Request received at /api/login:', req.method, req.body);
+    // Log all incoming requests
+    console.log('Incoming request at /api/login:', {
+        method: req.method,
+        body: req.body,
+        headers: req.headers
+    });
 
     if (!process.env.MONGO_URI) {
         console.error('MONGO_URI not set');
