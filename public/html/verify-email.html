@@ -108,7 +108,55 @@
                 alert('Error resending verification email: ' + err.message);
             });
         }
+        // Load header
+fetch('/html/header.html')
+    .then(response => {
+        if (!response.ok) throw new Error('Failed to load header');
+        return response.text();
+    })
+    .then(data => {
+        const headerPlaceholder = document.getElementById('header-placeholder');
+        if (headerPlaceholder) {
+            headerPlaceholder.innerHTML = data;
+
+            // Update logged-in user info
+            let storedEmail = localStorage.getItem('userEmail');
+            const storedName = localStorage.getItem('userName');
+
+            if (storedEmail) storedEmail = storedEmail.toLowerCase();
+
+            if (storedEmail && storedName) {
+                const loggedInUser = document.getElementById('loggedInUser');
+                const logoutButton = document.getElementById('logoutButton');
+                const profileLink = document.getElementById('profileLink');
+                if (loggedInUser) {
+                    loggedInUser.textContent = `Welcome, ${storedName}`;
+                }
+                if (logoutButton) {
+                    logoutButton.classList.remove('hidden');
+                }
+                if (profileLink) {
+                    profileLink.classList.remove('hidden');
+                }
+            }
+        }
+    })
+    .catch(err => console.error('Error loading header:', err));
+
+// Load footer
+fetch('/html/footer.html')
+    .then(response => {
+        if (!response.ok) throw new Error('Failed to load footer');
+        return response.text();
+    })
+    .then(data => {
+        const footerPlaceholder = document.getElementById('footer-placeholder');
+        if (footerPlaceholder) {
+            footerPlaceholder.innerHTML = data;
+        }
+    })
+    .catch(err => console.error('Error loading footer:', err));
     </script>
-     <script src="/js/load-common.js"></script>
+    
 </body>
 </html>
