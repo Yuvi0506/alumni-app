@@ -41,7 +41,11 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, token, action: 'verify' })
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Fetch response status:', response.status);
+                console.log('Fetch response headers:', response.headers);
+                return response.json();
+            })
             .then(data => {
                 console.log('Verification response:', data);
                 if (data.success) {
@@ -52,11 +56,12 @@
                 }
             })
             .catch(err => {
-                console.error('Error during verification:', err);
-                alert('Error during verification');
+                console.error('Fetch error during verification:', err);
+                alert('Error during verification: ' + err.message);
             });
         } else {
             console.log('Missing token or email in URL parameters');
+            alert('Invalid verification link: Missing token or email');
         }
 
         function resendVerification() {
@@ -65,6 +70,7 @@
                 return;
             }
 
+            console.log(`Resending verification email for: ${email}`);
             fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -72,6 +78,7 @@
             })
             .then(response => response.json())
             .then(data => {
+                console.log('Resend verification response:', data);
                 if (data.success) {
                     alert(data.message);
                 } else {
@@ -79,7 +86,8 @@
                 }
             })
             .catch(err => {
-                alert('Error resending verification email');
+                console.error('Fetch error during resend verification:', err);
+                alert('Error resending verification email: ' + err.message);
             });
         }
     </script>
