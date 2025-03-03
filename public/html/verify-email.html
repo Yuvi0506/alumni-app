@@ -11,7 +11,7 @@
     <div id="header-placeholder"></div>
     <div class="container">
         <div class="verify-email">
-            <p>Please check your email to verify your account.</p>
+            <p id="statusMessage">Verifying your email...</p>
             <p>Didn't receive an email? <button onclick="resendVerification()">Resend Email</button></p>
             <a href="/login.html">Back to Login</a>
         </div>
@@ -20,15 +20,21 @@
 
     <script src="/js/load-common.js"></script>
     <script>
+        console.log('Verify-email script starting...');
+
         // Get email and token from URL query parameters
         const urlParams = new URLSearchParams(window.location.search);
         let email = urlParams.get('email');
         const token = urlParams.get('token');
 
         // Log the extracted parameters
-        console.log('Verify-email page loaded, extracted parameters:');
+        console.log('Extracted parameters:');
         console.log('Email:', email);
         console.log('Token:', token);
+
+        // Update UI to show loading state
+        const statusMessage = document.getElementById('statusMessage');
+        statusMessage.textContent = 'Verifying your email...';
 
         // Convert email to lowercase
         if (email) email = email.toLowerCase();
@@ -43,24 +49,33 @@
             })
             .then(response => {
                 console.log('Fetch response status:', response.status);
-                console.log('Fetch response headers:', response.headers);
+                console.log('Fetch response headers:', [...response.headers.entries()]);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
                 return response.json();
             })
             .then(data => {
                 console.log('Verification response:', data);
                 if (data.success) {
+                    statusMessage.textContent = 'Email verified successfully! Redirecting to login...';
                     alert(data.message);
-                    window.location.href = '/login.html';
+                    setTimeout(() => {
+                        window.location.href = '/login.html';
+                    }, 1000); // Delay redirect to show success message
                 } else {
+                    statusMessage.textContent = 'Verification failed: ' + data.message;
                     alert(data.message);
                 }
             })
             .catch(err => {
                 console.error('Fetch error during verification:', err);
+                statusMessage.textContent = 'Error during verification: ' + err.message;
                 alert('Error during verification: ' + err.message);
             });
         } else {
             console.log('Missing token or email in URL parameters');
+            statusMessage.textContent = 'Invalid verification link: Missing token or email';
             alert('Invalid verification link: Missing token or email');
         }
 
@@ -76,7 +91,10 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, action: 'resend-verification' })
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Resend fetch response status:', response.status);
+                return response.json();
+            })
             .then(data => {
                 console.log('Resend verification response:', data);
                 if (data.success) {
