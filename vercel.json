@@ -9,11 +9,14 @@
     { "src": "/html/index.html", "dest": "/html/index.html" },
     { "src": "/html/signup.html", "dest": "/html/signup.html" },
     { "src": "/html/profile.html", "dest": "/html/profile.html" },
+    { "src": "/html/verify-email.html", "dest": "/html/verify-email.html" },
+    { "src": "/html/home.html", "dest": "/html/home.html" },
     { "src": "/html/header.html", "dest": "/html/header.html" },
     { "src": "/html/footer.html", "dest": "/html/footer.html" },
     { "src": "/css/(.*)", "dest": "/css/$1" },
     { "src": "/js/(.*)", "dest": "/js/$1" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/login.html" }
+    { "src": "/$", "dest": "/html/home.html" },
+    { "src": "/(.*)", "dest": "/html/home.html" }
   ]
 }

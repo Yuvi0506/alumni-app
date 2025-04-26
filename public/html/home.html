@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Loyola Alumni Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="home-page">
+    <div id="header-placeholder"></div>
+    <div class="container">
+        <div class="home-content">
+            <h1>Welcome to the Loyola College Chennai Alumni Association - USA Chapter</h1>
+            <p>
+                We are a dynamic and growing network of Loyolites living across all 50 states of the United States, 
+                bound together by the shared values, memories, and transformative education we received at Loyola College, Chennai.
+            </p>
+            <p>
+                The Loyola Alumni Association USA Chapter serves as a bridge—connecting past, present, and future Loyolites. 
+                We are more than just an alumni network—we are a family of changemakers, innovators, mentors, and lifelong learners 
+                who continue to carry the Ignatian spirit of "Men and Women for Others" into every corner of the world.
+            </p>
+
+            <h2>Who We Are</h2>
+            <p>
+                We are entrepreneurs, educators, scientists, technologists, artists, public servants, and visionaries. 
+                But at our core—we are Loyolites, inspired to make the world a better place.
+            </p>
+            <p>
+                This platform is your gateway to events, reunions, updates, volunteering opportunities, global collaborations, 
+                and stories that inspire. Whether you graduated last year or decades ago, you belong here.
+            </p>
+
+            <h2>Discover How You Can Engage</h2>
+            <p>
+                Explore our six core areas of engagement (please specify the areas):
+            </p>
+            <ul>
+                <li>Area 1 (e.g., Networking Events)</li>
+                <li>Area 2 (e.g., Mentorship Programs)</li>
+                <li>Area 3 (e.g., Volunteering Opportunities)</li>
+                <li>Area 4 (e.g., Global Collaborations)</li>
+                <li>Area 5 (e.g., Reunions and Gatherings)</li>
+                <li>Area 6 (e.g., Inspiring Stories)</li>
+            </ul>
+            <p>
+                Let's keep the Loyola spirit alive—across time zones, across generations, and across the globe. 
+                Together, we connect, collaborate, and celebrate—strengthening our bonds and shaping a brighter future for Loyolites everywhere.
+            </p>
+            <p><strong>Welcome aboard!</strong></p>
+            <button onclick="window.location.href='/signup'">Join the Community</button>
+
+            <h2>The Loyola Story</h2>
+            <p>
+                100 years ago, a Jesuit priest disregarded sceptics and bought 50 acres of "unattractive" land in Madras for Rs. 60,000. 
+                And thus was born one of the most prestigious colleges in South India. 
+                (<em>Source: Times of India</em>)
+            </p>
+            <video controls class="loyola-video">
+                <source src="https://www.loyolacollege.edu/centenary/100.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+
+    <script src="/js/load-common.js"></script>
+    <script>
+        console.log('Home page loaded, checking authentication state...');
+        const storedRole = localStorage.getItem('userRole');
+        const storedEmail = localStorage.getItem('userEmail');
+        const storedName = localStorage.getItem('userName');
+
+        if (storedRole && storedEmail && storedName) {
+            console.log('User already logged in, redirecting to /html/index.html');
+            window.location.replace('/html/index.html');
+        } else {
+            console.log('User not logged in, rendering home page.');
+        }
+    </script>
+</body>
+</html>
