@@ -560,3 +560,72 @@ tr:hover {
         padding: 8px 4px;
     }
 }
+
+/* Home Page Styles */
+.home-page .container {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.home-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.home-content h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.home-content h2 {
+    font-size: 1.8rem;
+    color: #555;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.home-content p {
+    font-size: 1.1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.home-content ul {
+    list-style-type: disc;
+    text-align: left;
+    margin: 20px auto;
+    padding-left: 40px;
+    max-width: 600px;
+}
+
+.home-content ul li {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.home-content button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 20px 0;
+}
+
+.home-content button:hover {
+    background-color: #0056b3;
+}
+
+.loyola-video {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    margin: 20px 0;
+    border-radius: 5px;
+}
