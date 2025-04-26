@@ -10,7 +10,8 @@ const publicPaths = [
     '/html/signup.html',
     '/html/verify-email.html',
     '/html/forgot-password.html',
-    '/html/reset-password.html'
+    '/html/reset-password.html',
+    '/html/home.html' // Ensures home page is accessible before login
 ];
 
 // Prevent redirect loop by checking if already redirecting
