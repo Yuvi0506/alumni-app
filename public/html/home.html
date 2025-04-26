@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="home-page">
-    <div id="header-placeholder"></div>
     <div class="hero-section">
         <div class="hero-overlay"></div>
         <div class="hero-content">
@@ -103,8 +102,8 @@
     </div>
     <div id="footer-placeholder"></div>
 
-    <script src="/js/load-common.js"></script>
     <script>
+        // Authentication redirect logic
         console.log('Home page loaded, checking authentication state...');
         const storedRole = localStorage.getItem('userRole');
         const storedEmail = localStorage.getItem('userEmail');
@@ -116,6 +115,20 @@
         } else {
             console.log('User not logged in, rendering home page.');
         }
+
+        // Load footer
+        fetch('/html/footer.html')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load footer');
+                return response.text();
+            })
+            .then(data => {
+                const footerPlaceholder = document.getElementById('footer-placeholder');
+                if (footerPlaceholder) {
+                    footerPlaceholder.innerHTML = data;
+                }
+            })
+            .catch(err => console.error('Error loading footer:', err));
 
         // Fade-in animation on scroll
         const fadeInElements = document.querySelectorAll('.fade-in');
